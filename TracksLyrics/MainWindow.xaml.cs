@@ -37,10 +37,12 @@ namespace TracksLyrics
 
     public partial class MainWindow : Window
     {
+        #region static variable
         private static List<Track> tracks;
         private static string path = @"C:\TrackList.txt";
-        private string title, artist, search;
-        private int sort_Position;
+        private static string title, artist, search;
+        private static int sort_Position;
+        #endregion
 
         public MainWindow()
         {
@@ -98,23 +100,23 @@ namespace TracksLyrics
             var listitem = sender as Button;
             var track = listitem.DataContext as Track;
 
-            ruLyrics.Items.Clear();
-            enLyrics.Items.Clear();
+            Lyrics.Items.Clear();
 
             string lyrics = track.ruLyrics;
 
-            ruLyrics.Items.Add(track.ruTitle);
-            ruLyrics.Items.Add("");
-            foreach (var line in lyrics.Split('\n'))
-                ruLyrics.Items.Add(line);
+            Lyrics.Items.Add(track.Title);
+            Lyrics.Items.Add(track.ruTitle);
+            Lyrics.Items.Add("");
 
-
-            lyrics = track.enLyrics;
-
-            enLyrics.Items.Add(track.Title);
-            enLyrics.Items.Add("");
-            foreach (var line in lyrics.Split('\n'))
-                enLyrics.Items.Add(line);
+            var enLyric = track.enLyrics.Split('\n');
+            var ruLyric = track.ruLyrics.Split('\n');
+            
+            for(int i = 0; i < enLyric.Length; i++)
+            {
+                Lyrics.Items.Add(enLyric[i]);
+                Lyrics.Items.Add(ruLyric[i]);
+                Lyrics.Items.Add("");
+            }
         }
 
         private void Sort_Button_Click(object sender, RoutedEventArgs e)
@@ -777,15 +779,7 @@ namespace TracksLyrics
         {
         }
 
-        private void ruLyrics_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-        }
-
-        private void enLyrics_Scroll(object sender, ScrollEventArgs e)
-        {
-        }
-
-        private void ruLyrics_Scroll(object sender, ScrollEventArgs e)
+        private void Lyrics_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
         }
 
