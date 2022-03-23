@@ -19,11 +19,11 @@
                 <GradientStop Color="#FF404040" Offset="0.759"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <TextBox Text="" HorizontalAlignment="Left" Height="44" Margin="10,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200" x:Name="ImportTitle" Background="#FF4B4B4B" BorderBrush="Black" SelectionBrush="{x:Null}" Foreground="#FFA2A2A2" FontFamily="Arial Black" FontSize="16" TextAlignment="Center" TextChanged="ImportTitle_TextChanged" Grid.ColumnSpan="2"/>
-        <TextBox Text="" HorizontalAlignment="Left" Height="44" Margin="162,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200" x:Name="ImportArtist" Background="#FF4C4C4C" BorderBrush="Black" SelectionBrush="{x:Null}" Foreground="#FFA2A2A2" FontFamily="Arial Black" FontSize="16" TextAlignment="Center" TextChanged="ImportArtist_TextChanged" Grid.Column="1"/>
+        <TextBox Text="" HorizontalAlignment="Left" Height="44" Margin="10,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="190" x:Name="ImportTitle" Background="#FF4B4B4B" BorderBrush="Black" SelectionBrush="{x:Null}" Foreground="#FFA2A2A2" FontFamily="Arial Black" FontSize="16" TextAlignment="Center" TextChanged="ImportTitle_TextChanged" Grid.ColumnSpan="2"/>
+        <TextBox Text="" HorizontalAlignment="Left" Height="44" Margin="172,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="190" x:Name="ImportArtist" Background="#FF4C4C4C" BorderBrush="Black" SelectionBrush="{x:Null}" Foreground="#FFA2A2A2" FontFamily="Arial Black" FontSize="16" TextAlignment="Center" TextChanged="ImportArtist_TextChanged" Grid.Column="1"/>
         <TextBox Text="" HorizontalAlignment="Left" Height="27" Margin="10,106,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="398" x:Name="Search" Background="#FF9B9C9C" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" Foreground="Black" FontFamily="Arial Black" FontSize="20" TextAlignment="Center" TextChanged="Search_TextChanged" AutomationProperties.Name="" Grid.ColumnSpan="2"/>
 
-        <ListBox Name="List_Track" Margin="10,138,0,10" BorderBrush="Black" Width="494" HorizontalAlignment="Left" Foreground="White" Grid.ColumnSpan="2" FontSize="14" FontWeight="Normal" FontFamily="Times New Roman">
+        <ListBox Name="List_Track" Margin="10,138,0,10" BorderBrush="Black" Width="494" HorizontalAlignment="Left" Foreground="White" Grid.ColumnSpan="2" FontSize="14" FontWeight="Normal" FontFamily="Times New Roman" SelectionChanged="List_Track_SelectionChanged">
             <ListBox.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FF939393"/>
@@ -33,8 +33,9 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,2">
-                        <TextBlock Text="{Binding Title}" />
-                        <TextBlock Margin="200, 0, 0, 0" Text="{Binding Artist}" />
+                        <TextBlock Text="{Binding Original}"/>
+                        <TextBlock Margin="20, 0, 0, 0" Text="{Binding Title}"/>
+                        <TextBlock Margin="220, 0, 0, 0" Text="{Binding Artist}"/>
 
                         <Button Margin="290, 0, 0, 0" Width="20" Content="R" x:Name="Reload_Button" Click="Reload_Button_Click"/>
                         <Button Margin="340, 0, 0, 0" Width="20" Content="S" x:Name="Set_Button" Click="Set_Button_Click"/>
@@ -45,7 +46,7 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <ListBox Margin="466,10,10,10" x:Name="Lyrics" Foreground="White" SelectionChanged="Lyrics_SelectionChanged" FontFamily="Times New Roman" FontSize="16" BorderBrush="{x:Null}" Grid.Column="1">
+        <ListBox Margin="466,10,10,10" x:Name="Lyrics" Foreground="White" SelectionChanged="Lyrics_SelectionChanged" FontFamily="Times New Roman" FontSize="18" BorderBrush="{x:Null}" Grid.Column="1">
             <ListBox.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="Black"/>
@@ -53,11 +54,13 @@
                 </LinearGradientBrush>
             </ListBox.Background>
         </ListBox>
-        <Button Content="Add" HorizontalAlignment="Left" Margin="382,38,0,0" VerticalAlignment="Top" Width="69" x:Name="Add_Button" Click="Add_Button_Click" Background="#FF9B9C9C" Height="44" FontSize="24" FontFamily="Arial Black" Grid.Column="1" />
-        <Button Content="Sort" HorizontalAlignment="Left" Margin="382,96,0,0" VerticalAlignment="Top" Width="69" x:Name="Sort_Button_Copy" Click="Sort_Button_Click" Background="#FF9B9C9C" Height="37" FontSize="24" FontFamily="Arial Black" Grid.Column="1" />
+        <Button Content="Add" HorizontalAlignment="Left" Margin="374,34,0,0" VerticalAlignment="Top" Width="77" x:Name="Add_Button" Click="Add_Button_Click" Background="#FF9B9C9C" Height="44" FontSize="24" FontFamily="Arial Black" Grid.Column="1" />
+        <Button Content="Sort" HorizontalAlignment="Left" Margin="374,106,0,0" VerticalAlignment="Top" Width="77" x:Name="Sort_Button" Click="Sort_Button_Click" Background="#FF9B9C9C" Height="27" FontSize="24" FontFamily="Arial Black" Grid.Column="1" />
+        <Button Content="Original" HorizontalAlignment="Left" Margin="374,82,0,0" VerticalAlignment="Top" Width="77" x:Name="Original_Button" Click="Original_Button_Click" Background="#FF9B9B9B" Height="19" FontFamily="Arial Black" Grid.Column="1" FontSize="14" />
+        <Button Content="Reload All" HorizontalAlignment="Left" Margin="374,10,0,0" VerticalAlignment="Top" Width="77" x:Name="Reload_All_Button" Click="Reload_All_Button_Click" Background="#FF9B9C9C" Height="16" FontSize="12" FontFamily="Arial Black" Grid.Column="1" />
 
-        <TextBlock Text="Artist" HorizontalAlignment="Left" Height="18" Margin="162,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200" Grid.Column="1" TextAlignment="Center" Foreground="Black" FontWeight="Bold" FontSize="14"/>
-        <TextBlock Text="Title" HorizontalAlignment="Left" Height="18" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200" TextAlignment="Center" Foreground="Black" FontWeight="Bold" FontSize="14" Grid.ColumnSpan="2"/>
-        <TextBlock Text="Search" HorizontalAlignment="Left" Height="18" Margin="117,87,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="94" TextAlignment="Center" Foreground="Black" FontWeight="Bold" FontSize="14" Grid.Column="1"/>
+        <TextBlock Text="Artist" HorizontalAlignment="Left" Height="18" Margin="172,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="190" Grid.Column="1" TextAlignment="Center" Foreground="Black" FontWeight="Bold" FontSize="14"/>
+        <TextBlock Text="Title" HorizontalAlignment="Left" Height="18" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="190" TextAlignment="Center" Foreground="Black" FontWeight="Bold" FontSize="14" Grid.ColumnSpan="2"/>
+        <TextBlock Text="Search" HorizontalAlignment="Left" Height="18" Margin="117,82,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="94" TextAlignment="Center" Foreground="Black" FontWeight="Bold" FontSize="14" Grid.Column="1"/>
     </Grid>
 </Window>

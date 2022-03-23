@@ -14,12 +14,14 @@ namespace TracksLyrics
 {
     public class Track
     {
-        public string Title { get; set; }
         public string Artist { get; set; }
+        public string Title { get; set; }
         public string ruTitle {get; set;}
 
         public string enLyrics { get; set; }
         public string ruLyrics { get; set; }
+
+        public string Original { get; set; }
     }
 
     public class SiteUrl
@@ -32,16 +34,19 @@ namespace TracksLyrics
     {
         EnLyrsense,
         RuMusinfo,
-        Lyricshub
+        Lyricshub,
+        Genius
     }
 
     public partial class MainWindow : Window
     {
-        #region static variable
+        #region Static variable
         private static List<Track> tracks;
         private static string path = @"C:\TrackList.txt";
         private static string title, artist, search;
         private static int sort_Position;
+        private static bool isOriginal;
+        private static bool original;
         #endregion
 
         public MainWindow()
@@ -50,6 +55,7 @@ namespace TracksLyrics
             tracks = new List<Track>();
             UploadFromFile();
             sort_Position = -1;
+            isOriginal = false;
         }
         /**/
         #region Button
@@ -61,6 +67,15 @@ namespace TracksLyrics
             ImportArtist.Text = "";
         }
 
+        private void Reload_All_Button_Click(object sender, RoutedEventArgs e)
+        {
+            var preTracks = tracks.ToArray();
+            tracks.Clear();
+
+            foreach(var track in preTracks)
+                CreateTrack(new Track() { Artist = track.Artist, Title = track.Title });
+        }
+
         private void Reload_Button_Click(object sender, RoutedEventArgs e)
         {
             var listitem = sender as Button;
@@ -68,7 +83,6 @@ namespace TracksLyrics
 
             List_Track.SelectedItem = listitem.DataContext;
             List_Track.Items.Remove(List_Track.SelectedItem);
-
 
             tracks.Remove(track);
             CreateTrack(new Track() { Artist = track.Artist, Title = track.Title });
@@ -102,20 +116,41 @@ namespace TracksLyrics
 
             Lyrics.Items.Clear();
 
-            string lyrics = track.ruLyrics;
-
-            Lyrics.Items.Add(track.Title);
-            Lyrics.Items.Add(track.ruTitle);
-            Lyrics.Items.Add("");
-
-            var enLyric = track.enLyrics.Split('\n');
-            var ruLyric = track.ruLyrics.Split('\n');
-            
-            for(int i = 0; i < enLyric.Length; i++)
+            if (isOriginal || track.ruTitle == "NLT")
             {
-                Lyrics.Items.Add(enLyric[i]);
-                Lyrics.Items.Add(ruLyric[i]);
+                Lyrics.Items.Add(track.Title);
                 Lyrics.Items.Add("");
+
+                var enLyric = track.enLyrics.Split('\n');
+
+                for (int i = 0; i < enLyric.Length; i++)
+                    Lyrics.Items.Add(enLyric[i]);
+            }
+            else
+            {
+
+                Lyrics.Items.Add(track.Title);
+                Lyrics.Items.Add(track.ruTitle);
+                Lyrics.Items.Add("");
+
+                var enLyric = track.enLyrics.Split('\n').ToList();
+                var ruLyric = track.ruLyrics.Split('\n').ToList();
+
+                if(enLyric.Count > ruLyric.Count || enLyric.Count > ruLyric.Count)
+                    while (enLyric.Count != ruLyric.Count)
+                    {
+                        if (enLyric.Count > ruLyric.Count)
+                            ruLyric.Add("");
+                        else
+                            enLyric.Add("");
+                    }
+
+                for (int i = 0; i < enLyric.Count; i++)
+                {
+                    Lyrics.Items.Add(enLyric[i]);
+                    Lyrics.Items.Add(ruLyric[i]);
+                    Lyrics.Items.Add("");
+                }
             }
         }
 
@@ -241,6 +276,22 @@ namespace TracksLyrics
                 }
             }
         }
+
+        private void Original_Button_Click(object sender, RoutedEventArgs e)
+        {
+            if(isOriginal)
+            {
+                Original_Button.Background = new SolidColorBrush(Color.FromArgb(255, 155, 155, 155));
+                Original_Button.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+            }
+            else
+            {
+                Original_Button.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+                Original_Button.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+            }
+
+            isOriginal = !isOriginal;
+        }
         #endregion
         /**/
         #region ImportData
@@ -253,11 +304,26 @@ namespace TracksLyrics
 
                 if (parsingInformation != null && parsingInformation.Any())
                 {
-                    track.Title = parsingInformation[0];
-                    track.ruTitle = parsingInformation[1];
+                    if(original)
+                    {
+                        track.Title = parsingInformation[0];
+                        track.ruTitle = "NLT";
 
-                    track.enLyrics = parsingInformation[2];
-                    track.ruLyrics = parsingInformation[3];
+                        track.enLyrics = parsingInformation[1];
+
+                        track.Original = "O";
+                        original = false;
+                    }
+                    else
+                    {
+                        track.Title = parsingInformation[0];
+                        track.ruTitle = parsingInformation[1];
+
+                        track.enLyrics = parsingInformation[2];
+                        track.ruLyrics = parsingInformation[3];
+
+                        track.Original = "T";
+                    }
 
                     List_Track.Items.Add(track);
                     tracks.Add(track);
@@ -270,7 +336,6 @@ namespace TracksLyrics
 
         private List<SiteUrl> CreateUrls(Track track)
         {
-
             var urls = new List<SiteUrl>();
 
             var siteRuMusinfo = "https://ru.musinfo.net/lyrics/" + DeleteSpace(track.Artist, Site.RuMusinfo) + "/" + DeleteSpace(track.Title, Site.RuMusinfo);
@@ -278,11 +343,10 @@ namespace TracksLyrics
             {
                 typeSite = Site.RuMusinfo,
                 urls = new List<string>
-                {
-                    siteRuMusinfo,
-                }
+            {
+                siteRuMusinfo,
+            }
             });
-
 
             string urlArtist = TheArtist(DeleteSpace(track.Artist, 0));
             var artistArticle = ArtistArticle(urlArtist);
@@ -291,24 +355,33 @@ namespace TracksLyrics
             {
                 typeSite = Site.EnLyrsense,
                 urls = new List<string>
-                {
-                    siteEnLyrsense,
-                    siteEnLyrsense + "_",
-                    siteEnLyrsense + "_" + artistArticle,
-                    siteEnLyrsense + "_" + urlArtist,
-                    siteEnLyrsense + "_" + urlArtist[0],
-                    siteEnLyrsense + "_" + urlArtist[0] + urlArtist[1],
-                }
+            {
+                siteEnLyrsense,
+                siteEnLyrsense + "_",
+                siteEnLyrsense + "_" + artistArticle,
+                siteEnLyrsense + "_" + urlArtist,
+                siteEnLyrsense + "_" + urlArtist[0],
+                siteEnLyrsense + "_" + urlArtist[0] + urlArtist[1],
+            }
             });
-
 
             var siteLyricshub = "https://lyricshub.ru/track/" + DeleteSpace(track.Artist, Site.Lyricshub) + "/" + DeleteSpace(track.Title, Site.Lyricshub) + "/translation";
             urls.Add(new SiteUrl
             {
                 typeSite = Site.Lyricshub,
                 urls = new List<string>
+            {
+                siteLyricshub,
+            }
+            });
+
+            var siteGenius = "https://genius.com/" + ToUpperFirstChar(DeleteSpace(track.Artist, Site.Genius)) + "-" + DeleteSpace(track.Title, Site.Genius) + "-lyrics";
+            urls.Add(new SiteUrl
+            {
+                typeSite = Site.Genius,
+                urls = new List<string>
                 {
-                    siteLyricshub,
+                    siteGenius,
                 }
             });
 
@@ -365,10 +438,33 @@ namespace TracksLyrics
                     return new string(corectNameByChar.ToArray());
                     break;
 
+                case Site.Genius:
+                    nameByChar = line.ToCharArray();
+
+                    corectNameByChar = new List<char>();
+
+                    foreach (var token in nameByChar)
+                    {
+                        if (token == ' ')
+                            corectNameByChar.Add('-');
+                        else
+                            corectNameByChar.Add(token);
+                    }
+                    return new string(corectNameByChar.ToArray()).ToLower();
+                    break;
+
                 default:
                     return null;
                     break;
             }
+        }
+
+        private static string ToUpperFirstChar(string line)
+        {
+            var correct = line.ToCharArray().ToList();
+            var item = correct[0] + "";
+            correct[0] = item.ToUpper()[0];
+            return new string(correct.ToArray());
         }
 
         private static string TheArtist(string artist)
@@ -433,7 +529,6 @@ namespace TracksLyrics
                                     }
                                     break;
 
-
                                 case Site.RuMusinfo:
                                     foreach (var url in urls.urls)
                                     {
@@ -467,6 +562,8 @@ namespace TracksLyrics
                                         if (resp.IsSuccessStatusCode)
                                         {
                                             var html = resp.Content.ReadAsStringAsync().Result;
+                                            if (html == "We couldn't find that page.")
+                                                break;
 
                                             if (!string.IsNullOrEmpty(html))
                                             {
@@ -494,6 +591,33 @@ namespace TracksLyrics
                                                 lyrics.Add(ToStringLyrics(ruLyric, Site.Lyricshub));
 
                                                 isFind = true;
+                                            }
+                                            break;
+                                        }
+                                    }
+                                    break;
+
+                                case Site.Genius:
+                                    foreach (var url in urls.urls)
+                                    {
+                                        HttpResponseMessage resp = clnt.GetAsync(url).Result;
+                                        if (resp.IsSuccessStatusCode)
+                                        {
+                                            var html = resp.Content.ReadAsStringAsync().Result;
+
+                                            if (!string.IsNullOrEmpty(html))
+                                            {
+                                                HtmlDocument doc = new HtmlDocument();
+                                                doc.LoadHtml(html);
+
+                                                lyrics.Add(doc.DocumentNode.SelectNodes(".//div[@id='lyrics-root']//h2[@class='TextLabel-sc-8kw9oj-0 Lyrics__Title-sc-1ynbvzw-0 hHEDka']")[0].InnerText.Split(" Lyrics")[0]);
+
+                                                var lyric = doc.DocumentNode.SelectNodes(".//div[@id='lyrics-root']")[0].InnerHtml.Split("<div data-lyrics-container=\"true\" class=\"Lyrics__Container-sc-1ynbvzw-6 jYfhrf\">").ToList();
+                                                lyric.RemoveAt(0);
+                                                lyrics.Add(ToStringLyrics(ClearSpecialSymbol(lyric.ToArray(), Site.Genius), Site.Genius));
+
+                                                isFind = true;
+                                                original = true;
                                             }
                                             break;
                                         }
@@ -632,12 +756,23 @@ namespace TracksLyrics
 
                     break;
 
+
+                case Site.Genius:
+                    correctLyrics = lyrics.ToList();
+
+                    foreach (var line in correctLyrics)
+                        resultLyrics.Add(line.Split("</div>")[0]);
+
+                    break;
+
                 default:
                     break;
             }
+            var interval = resultLyrics.ToArray();
+            resultLyrics.Clear();
 
-            var result = new List<string>();
-            foreach(var line in resultLyrics)
+            // &#x27;
+            foreach (var line in interval) 
             {
                 var correctLine = line.Split("&#x27;");
                 var resultLine = "";
@@ -652,9 +787,67 @@ namespace TracksLyrics
                             resultLine += correctLine[i] + "`";
                     }
 
-                result.Add(resultLine);
+                resultLyrics.Add(resultLine);
             }
-            return result;
+            interval = resultLyrics.ToArray();
+            resultLyrics.Clear();
+
+            // &quot;
+            foreach (var line in interval)
+            {
+                var correctLine = line.Split("&quot;");
+                var resultLine = "";
+                if (correctLine.Length == 1)
+                    resultLine = correctLine[0];
+                else
+                    for (int i = 0; i < correctLine.Length; i++)
+                    {
+                        if (i == correctLine.Length - 1)
+                            resultLine += correctLine[i];
+                        else
+                            resultLine += correctLine[i] + "`";
+                    }
+
+                resultLyrics.Add(resultLine);
+            }
+
+            interval = resultLyrics.ToArray();
+            resultLyrics.Clear();
+
+
+            // &amp;
+            foreach (var line in interval)
+            {
+                var correctLine = line.Split("&amp;");
+                var resultLine = "";
+                if (correctLine.Length == 1)
+                    resultLine = correctLine[0];
+                else
+                    for (int i = 0; i < correctLine.Length; i++)
+                    {
+                        if (i == correctLine.Length - 1)
+                            resultLine += correctLine[i];
+                        else
+                            resultLine += correctLine[i] + "`";
+                    }
+
+                resultLyrics.Add(resultLine);
+            }
+
+            interval = resultLyrics.ToArray();
+            resultLyrics.Clear();
+
+            // <sup>
+            foreach (var line in interval)
+            {
+                var correctLine = line.Split("<sup>");
+                var resultLine = "";
+                resultLine = correctLine[0];
+
+                resultLyrics.Add(resultLine);
+            }
+
+            return resultLyrics;
         }
 
         private static string ToStringLyrics(List<string> lyrics, Site site)
@@ -687,6 +880,13 @@ namespace TracksLyrics
                     break;
 
 
+                case Site.Genius:
+                    foreach (var line in lyrics)
+                        foreach (var verbs in line.Split("<br>"))
+                            resultLyrics += verbs + "\n";
+
+                    break;
+
                 default:
                     break;
             }
@@ -707,7 +907,11 @@ namespace TracksLyrics
                     while ((trackLine = sr.ReadLine()) != null)
                     {
                         var track = trackLine.Split("&");
-                        tracks.Add(new Track { Title = track[0], Artist = track[1], ruTitle = track[2], enLyrics = LyricsToUpload(track[3]), ruLyrics = LyricsToUpload(track[4]) });
+                        if (track[3] != "NLT")
+                            tracks.Add(new Track { Original = track[0], Title = track[1], Artist = track[2], ruTitle = track[3], enLyrics = LyricsToUpload(track[4]), ruLyrics = LyricsToUpload(track[5]) });
+                        else
+                            tracks.Add(new Track { Original = track[0], Title = track[1], Artist = track[2], ruTitle = track[3], enLyrics = LyricsToUpload(track[4]) });
+
                     }
                 }
 
@@ -729,7 +933,10 @@ namespace TracksLyrics
             string file = "";
             foreach(var track in tracks)
             {
-                file += track.Title + "&" + track.Artist + "&" + track.ruTitle + "&" + LyricsToSave(track.enLyrics) + "&" + LyricsToSave(track.ruLyrics) + "\n";
+                if (track.ruTitle != "NLT")
+                    file += track.Original + "&" + track.Title + "&" + track.Artist + "&" + track.ruTitle + "&" + LyricsToSave(track.enLyrics) + "&" + LyricsToSave(track.ruLyrics) + "\n";
+                else
+                    file += track.Original + "&" + track.Title + "&" + track.Artist + "&" + track.ruTitle + "&" + LyricsToSave(track.enLyrics) + "\n";
             }
             File.WriteAllText(path, file);
         }
@@ -775,6 +982,11 @@ namespace TracksLyrics
             title = ImportTitle.Text;
         }
 
+        private void List_Track_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
         private void enLyrics_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
         }
@@ -782,8 +994,7 @@ namespace TracksLyrics
         private void Lyrics_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
         }
-
+        #endregion
+        /**/
     }
-    #endregion
-    /**/
 }
