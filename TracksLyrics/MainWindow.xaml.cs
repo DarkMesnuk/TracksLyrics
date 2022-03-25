@@ -45,8 +45,9 @@ namespace TracksLyrics
         private static string path = @"C:\TrackList.txt";
         private static string title, artist, search;
         private static int sort_Position;
-        private static bool isOriginal;
+        private static bool isOriginal, isUpload;
         private static bool original;
+        private static object SelectedTrack;
         #endregion
 
         public MainWindow()
@@ -56,6 +57,7 @@ namespace TracksLyrics
             UploadFromFile();
             sort_Position = -1;
             isOriginal = false;
+            isUpload = false;
         }
         /**/
         #region Button
@@ -125,10 +127,11 @@ namespace TracksLyrics
 
                 for (int i = 0; i < enLyric.Length; i++)
                     Lyrics.Items.Add(enLyric[i]);
+
+                SetLyrics_TextBox.Text = (track.Title) + "\n\n" + track.enLyrics;
             }
             else
             {
-
                 Lyrics.Items.Add(track.Title);
                 Lyrics.Items.Add(track.ruTitle);
                 Lyrics.Items.Add("");
@@ -151,6 +154,54 @@ namespace TracksLyrics
                     Lyrics.Items.Add(ruLyric[i]);
                     Lyrics.Items.Add("");
                 }
+
+                SetLyrics_TextBox.Text = (track.ruTitle) + "\n\n" + track.ruLyrics;
+            }
+            SelectedTrack = listitem.DataContext;
+        }
+
+        private void Show_Lyrics_Button_Click(Track track)
+        {
+            Lyrics.Items.Clear();
+
+            if (isOriginal || track.ruTitle == "NLT")
+            {
+                Lyrics.Items.Add(track.Title);
+                Lyrics.Items.Add("");
+
+                var enLyric = track.enLyrics.Split('\n');
+
+                for (int i = 0; i < enLyric.Length; i++)
+                    Lyrics.Items.Add(enLyric[i]);
+
+                SetLyrics_TextBox.Text = (track.Title) + "\n\n" + track.enLyrics;
+            }
+            else
+            {
+                Lyrics.Items.Add(track.Title);
+                Lyrics.Items.Add(track.ruTitle);
+                Lyrics.Items.Add("");
+
+                var enLyric = track.enLyrics.Split('\n').ToList();
+                var ruLyric = track.ruLyrics.Split('\n').ToList();
+
+                if (enLyric.Count > ruLyric.Count || enLyric.Count > ruLyric.Count)
+                    while (enLyric.Count != ruLyric.Count)
+                    {
+                        if (enLyric.Count > ruLyric.Count)
+                            ruLyric.Add("");
+                        else
+                            enLyric.Add("");
+                    }
+
+                for (int i = 0; i < enLyric.Count; i++)
+                {
+                    Lyrics.Items.Add(enLyric[i]);
+                    Lyrics.Items.Add(ruLyric[i]);
+                    Lyrics.Items.Add("");
+                }
+
+                SetLyrics_TextBox.Text = (track.ruTitle) + "\n\n" + track.ruLyrics;
             }
         }
 
@@ -244,7 +295,15 @@ namespace TracksLyrics
                 var sorted = new List<Track>();
                 if (search.Split("-").Length != 2)
                 {
-                    sorted = tracks.Where(x => x.Title.Remove(search.Length).ToLower() == search).ToList();
+                    foreach (var track in tracks)
+                        if (track.Title.Length > search.Length || track.Title.ToLower() == search.ToLower())
+                        {
+                            if(track.Title.ToLower() == search.ToLower())
+                                sorted.Add(track);
+                            else
+                                if (track.Title.Remove(search.Length).ToLower() == search.ToLower())
+                                    sorted.Add(track);
+                        }
                 }
                 else
                 {
@@ -291,6 +350,45 @@ namespace TracksLyrics
             }
 
             isOriginal = !isOriginal;
+            Show_Lyrics_Button_Click(SelectedTrack as Track);
+        }
+
+        private void Upload_T_Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (isUpload)
+            {
+                Upload_T_Button.Background = new SolidColorBrush(Color.FromArgb(255, 155, 155, 155));
+                Upload_T_Button.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+
+                SetLyrics_TextBox.Margin = new Thickness(374, 106, 0, 0);
+                SetLyrics_TextBox.Width = 1;
+                SetLyrics_TextBox.Height = 1;
+
+                Lyrics.Margin = new Thickness(466, 10, 10, 10);
+                Lyrics.Width = 578;
+                Lyrics.Height = 684;
+
+
+                if (isOriginal)
+                    ResetEnLyrics(SetLyrics_TextBox.Text);
+                else
+                    ResetRuLyrics(SetLyrics_TextBox.Text);
+            }
+            else
+            {
+                Upload_T_Button.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+                Upload_T_Button.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+
+                SetLyrics_TextBox.Margin = new Thickness(466, 10, 10, 10);
+                SetLyrics_TextBox.Width = 578;
+                SetLyrics_TextBox.Height = 684;
+
+                Lyrics.Margin = new Thickness(374, 106, 0, 0);
+                Lyrics.Width = 1;
+                Lyrics.Height = 1;
+            }
+
+            isUpload = !isUpload;
         }
         #endregion
         /**/
@@ -506,121 +604,139 @@ namespace TracksLyrics
                                 case Site.EnLyrsense:
                                     foreach (var url in urls.urls)
                                     {
-                                        HttpResponseMessage resp = clnt.GetAsync(url).Result;
-                                        if (resp.IsSuccessStatusCode)
+                                        try
                                         {
-                                            var html = resp.Content.ReadAsStringAsync().Result;
-
-                                            if (!string.IsNullOrEmpty(html))
+                                            HttpResponseMessage resp = clnt.GetAsync(url).Result;
+                                            if (resp.IsSuccessStatusCode)
                                             {
-                                                HtmlDocument doc = new HtmlDocument();
-                                                doc.LoadHtml(html);
+                                                var html = resp.Content.ReadAsStringAsync().Result;
 
-                                                lyrics.Add(doc.DocumentNode.SelectNodes(".//h2[@id='fr_title']")[0].InnerText);
-                                                lyrics.Add(doc.DocumentNode.SelectNodes(".//h2[@id='ru_title']")[0].InnerText);
+                                                if (!string.IsNullOrEmpty(html))
+                                                {
+                                                    HtmlDocument doc = new HtmlDocument();
+                                                    doc.LoadHtml(html);
 
-                                                lyrics.Add(ToStringLyrics(ClearSpecialSymbol(doc.DocumentNode.SelectNodes(".//p[@id='fr_text']")[0].InnerHtml.Split("</span>"), Site.EnLyrsense, false), Site.EnLyrsense));
-                                                lyrics.Add(ToStringLyrics(ClearSpecialSymbol(doc.DocumentNode.SelectNodes(".//p[@id='ru_text']")[0].InnerHtml.Split("</span>"), Site.EnLyrsense, true), Site.EnLyrsense));
+                                                    lyrics.Add(doc.DocumentNode.SelectNodes(".//h2[@id='fr_title']")[0].InnerText);
+                                                    lyrics.Add(doc.DocumentNode.SelectNodes(".//h2[@id='ru_title']")[0].InnerText);
 
-                                                isFind = true;
+                                                    lyrics.Add(ToStringLyrics(ClearSpecialSymbol(doc.DocumentNode.SelectNodes(".//p[@id='fr_text']")[0].InnerHtml.Split("</span>"), Site.EnLyrsense, false), Site.EnLyrsense));
+                                                    lyrics.Add(ToStringLyrics(ClearSpecialSymbol(doc.DocumentNode.SelectNodes(".//p[@id='ru_text']")[0].InnerHtml.Split("</span>"), Site.EnLyrsense, true), Site.EnLyrsense));
+
+                                                    isFind = true;
+                                                }
+                                                break;
                                             }
-                                            break;
                                         }
+                                        catch { }
                                     }
                                     break;
 
                                 case Site.RuMusinfo:
                                     foreach (var url in urls.urls)
                                     {
-                                        HttpResponseMessage resp = clnt.GetAsync(url).Result;
-                                        if (resp.IsSuccessStatusCode)
+                                        try
                                         {
-                                            var html = resp.Content.ReadAsStringAsync().Result;
-
-                                            if (!string.IsNullOrEmpty(html))
+                                            HttpResponseMessage resp = clnt.GetAsync(url).Result;
+                                            if (resp.IsSuccessStatusCode)
                                             {
-                                                HtmlDocument doc = new HtmlDocument();
-                                                doc.LoadHtml(html);
+                                                var html = resp.Content.ReadAsStringAsync().Result;
 
-                                                lyrics.Add(doc.DocumentNode.SelectNodes(".//td[@id='lyric-src']//div[@class='h3 text-center']")[0].InnerText);
-                                                lyrics.Add(doc.DocumentNode.SelectNodes(".//td[@id='lyric-dst']//div[@class='h3 text-center']")[0].InnerText);
+                                                if (!string.IsNullOrEmpty(html))
+                                                {
+                                                    HtmlDocument doc = new HtmlDocument();
+                                                    doc.LoadHtml(html);
 
-                                                lyrics.Add(ToStringLyrics(ClearSpecialSymbol(doc.DocumentNode.SelectNodes(".//td[@id='lyric-src']")[0].InnerHtml.Split("<div class=\"line\">"), Site.RuMusinfo), Site.RuMusinfo));
-                                                lyrics.Add(ToStringLyrics(ClearSpecialSymbol(doc.DocumentNode.SelectNodes(".//td[@id='lyric-dst']")[0].InnerHtml.Split("<div class=\"line\">"), Site.RuMusinfo), Site.RuMusinfo));
+                                                    lyrics.Add(doc.DocumentNode.SelectNodes(".//td[@id='lyric-src']//div[@class='h3 text-center']")[0].InnerText);
+                                                    lyrics.Add(doc.DocumentNode.SelectNodes(".//td[@id='lyric-dst']//div[@class='h3 text-center']")[0].InnerText);
 
-                                                isFind = true;
+                                                    lyrics.Add(ToStringLyrics(ClearSpecialSymbol(doc.DocumentNode.SelectNodes(".//td[@id='lyric-src']")[0].InnerHtml.Split("<div class=\"line\">"), Site.RuMusinfo), Site.RuMusinfo));
+                                                    lyrics.Add(ToStringLyrics(ClearSpecialSymbol(doc.DocumentNode.SelectNodes(".//td[@id='lyric-dst']")[0].InnerHtml.Split("<div class=\"line\">"), Site.RuMusinfo), Site.RuMusinfo));
+
+                                                    isFind = true;
+                                                }
+                                                break;
                                             }
-                                            break;
                                         }
+                                        catch { }
                                     }
                                     break;
 
                                 case Site.Lyricshub:
                                     foreach (var url in urls.urls)
                                     {
-                                        HttpResponseMessage resp = clnt.GetAsync(url).Result;
-                                        if (resp.IsSuccessStatusCode)
+                                        try 
                                         {
-                                            var html = resp.Content.ReadAsStringAsync().Result;
-                                            if (html == "We couldn't find that page.")
-                                                break;
-
-                                            if (!string.IsNullOrEmpty(html))
+                                            HttpResponseMessage resp = clnt.GetAsync(url).Result;
+                                            if (resp.IsSuccessStatusCode)
                                             {
-                                                HtmlDocument doc = new HtmlDocument();
-                                                doc.LoadHtml(html);
+                                                var html = resp.Content.ReadAsStringAsync().Result;
+                                                if (html == "We couldn't find that page.")
+                                                    break;
 
-                                                var title = doc.DocumentNode.SelectNodes(".//h2[@class='lyrtitle']")[0].InnerText.Split('-')[1].ToCharArray().ToList();
-                                                title.RemoveAt(0);
-
-                                                lyrics.Add(new string(title.ToArray()));
-                                                lyrics.Add(new string(title.ToArray()));
-                                                
-                                                var lyric = ClearSpecialSymbol(doc.DocumentNode.SelectNodes(".//div[@class='col-sm-12 col-md-12 col-lg-9 cont']")[0].InnerHtml.Split("<div class=\"orlangstr\">"), Site.Lyricshub);
-
-                                                var enlyric = new List<string>();
-                                                var ruLyric = new List<string>();
-
-                                                for(int i = 0; i < lyric.Count; i += 2)
+                                                if (!string.IsNullOrEmpty(html))
                                                 {
-                                                    enlyric.Add(lyric[i]);
-                                                    ruLyric.Add(lyric[i + 1]);
+                                                    HtmlDocument doc = new HtmlDocument();
+                                                    doc.LoadHtml(html);
+
+                                                    var title = doc.DocumentNode.SelectNodes(".//h2[@class='lyrtitle']")[0].InnerText.Split('-')[1].ToCharArray().ToList();
+                                                    title.RemoveAt(0);
+
+                                                    lyrics.Add(new string(title.ToArray()));
+                                                    lyrics.Add(new string(title.ToArray()));
+                                                
+                                                    var lyric = ClearSpecialSymbol(doc.DocumentNode.SelectNodes(".//div[@class='col-sm-12 col-md-12 col-lg-9 cont']")[0].InnerHtml.Split("<div class=\"orlangstr\">"), Site.Lyricshub);
+
+                                                    var enlyric = new List<string>();
+                                                    var ruLyric = new List<string>();
+
+                                                    for(int i = 0; i < lyric.Count; i += 2)
+                                                    {
+                                                        enlyric.Add(lyric[i]);
+                                                        ruLyric.Add(lyric[i + 1]);
+                                                    }
+
+                                                    lyrics.Add(ToStringLyrics(enlyric, Site.Lyricshub));
+                                                    lyrics.Add(ToStringLyrics(ruLyric, Site.Lyricshub));
+
+                                                    isFind = true;
                                                 }
-
-                                                lyrics.Add(ToStringLyrics(enlyric, Site.Lyricshub));
-                                                lyrics.Add(ToStringLyrics(ruLyric, Site.Lyricshub));
-
-                                                isFind = true;
+                                                break;
                                             }
-                                            break;
+
                                         }
+                                        catch { }
                                     }
                                     break;
 
                                 case Site.Genius:
                                     foreach (var url in urls.urls)
                                     {
-                                        HttpResponseMessage resp = clnt.GetAsync(url).Result;
-                                        if (resp.IsSuccessStatusCode)
+                                        try 
                                         {
-                                            var html = resp.Content.ReadAsStringAsync().Result;
-
-                                            if (!string.IsNullOrEmpty(html))
+                                            HttpResponseMessage resp = clnt.GetAsync(url).Result;
+                                            if (resp.IsSuccessStatusCode)
                                             {
-                                                HtmlDocument doc = new HtmlDocument();
-                                                doc.LoadHtml(html);
+                                                var html = resp.Content.ReadAsStringAsync().Result;
 
-                                                lyrics.Add(doc.DocumentNode.SelectNodes(".//div[@id='lyrics-root']//h2[@class='TextLabel-sc-8kw9oj-0 Lyrics__Title-sc-1ynbvzw-0 hHEDka']")[0].InnerText.Split(" Lyrics")[0]);
+                                                if (!string.IsNullOrEmpty(html))
+                                                {
+                                                    HtmlDocument doc = new HtmlDocument();
+                                                    doc.LoadHtml(html);
 
-                                                var lyric = doc.DocumentNode.SelectNodes(".//div[@id='lyrics-root']")[0].InnerHtml.Split("<div data-lyrics-container=\"true\" class=\"Lyrics__Container-sc-1ynbvzw-6 jYfhrf\">").ToList();
-                                                lyric.RemoveAt(0);
-                                                lyrics.Add(ToStringLyrics(ClearSpecialSymbol(lyric.ToArray(), Site.Genius), Site.Genius));
+                                                    lyrics.Add(doc.DocumentNode.SelectNodes(".//div[@id='lyrics-root']//h2[@class='TextLabel-sc-8kw9oj-0 Lyrics__Title-sc-1ynbvzw-0 hHEDka']")[0].InnerText.Split(" Lyrics")[0]);
 
-                                                isFind = true;
-                                                original = true;
+                                                    var lyric = doc.DocumentNode.SelectNodes(".//div[@id='lyrics-root']")[0].InnerHtml.Split("<div data-lyrics-container=\"true\" class=\"Lyrics__Container-sc-1ynbvzw-6 jYfhrf\">").ToList();
+                                                    lyric.RemoveAt(0);
+                                                    lyrics.Add(ToStringLyrics(ClearSpecialSymbol(lyric.ToArray(), Site.Genius), Site.Genius));
+
+                                                    isFind = true;
+                                                    original = true;
+                                                }
+                                                break;
                                             }
-                                            break;
+
                                         }
+                                        catch { }
                                     }
                                     break;
 
@@ -894,6 +1010,46 @@ namespace TracksLyrics
             return resultLyrics;
 
         }
+
+        private void ResetRuLyrics(string lyrics)
+        {
+            var track = SelectedTrack as Track;
+            track.ruTitle = lyrics.Split("\n\n")[0];
+            var lyric = lyrics.ToCharArray().ToList();
+            lyric.RemoveRange(0, track.ruTitle.Length + 2);
+
+            track.ruLyrics = new string(lyric.ToArray());
+
+            List_Track.Items.Remove(SelectedTrack);
+            tracks.Remove(track);
+
+            List_Track.Items.Add(track);
+            tracks.Add(track);
+
+            if (track.Original == "O")
+                track.Original = "T";
+            SaveToFile();
+            Show_Lyrics_Button_Click(track);
+        }
+
+        private void ResetEnLyrics(string lyrics)
+        {
+            var track = SelectedTrack as Track;
+            track.Title = lyrics.Split("\n\n")[0];
+            var lyric = lyrics.ToCharArray().ToList();
+            lyric.RemoveRange(0, track.Title.Length + 2);
+
+            track.enLyrics = new string(lyric.ToArray());
+
+            List_Track.Items.Remove(SelectedTrack);
+            tracks.Remove(track);
+
+            List_Track.Items.Add(track);
+            tracks.Add(track);
+
+            SaveToFile();
+            Show_Lyrics_Button_Click(track);
+        }
         #endregion
         /**/
         #region File
@@ -906,12 +1062,18 @@ namespace TracksLyrics
                     string trackLine;
                     while ((trackLine = sr.ReadLine()) != null)
                     {
-                        var track = trackLine.Split("&");
-                        if (track[3] != "NLT")
-                            tracks.Add(new Track { Original = track[0], Title = track[1], Artist = track[2], ruTitle = track[3], enLyrics = LyricsToUpload(track[4]), ruLyrics = LyricsToUpload(track[5]) });
-                        else
-                            tracks.Add(new Track { Original = track[0], Title = track[1], Artist = track[2], ruTitle = track[3], enLyrics = LyricsToUpload(track[4]) });
+                        try
+                        {
+                            var track = trackLine.Split("&");
+                            if (track[3] != "NLT")
+                                tracks.Add(new Track { Original = track[0], Title = track[1], Artist = track[2], ruTitle = track[3], enLyrics = LyricsToUpload(track[4]), ruLyrics = LyricsToUpload(track[5]) });
+                            else
+                                tracks.Add(new Track { Original = track[0], Title = track[1], Artist = track[2], ruTitle = track[3], enLyrics = LyricsToUpload(track[4]) });
+                        }
+                        catch
+                        {
 
+                        }
                     }
                 }
 
@@ -980,6 +1142,10 @@ namespace TracksLyrics
         private void ImportTitle_TextChanged(object sender, TextChangedEventArgs e)
         {
             title = ImportTitle.Text;
+        }
+
+        private void SetLyrics_TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
         }
 
         private void List_Track_SelectionChanged(object sender, SelectionChangedEventArgs e)
