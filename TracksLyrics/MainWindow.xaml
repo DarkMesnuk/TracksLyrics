@@ -5,31 +5,84 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TracksLyrics"
         mc:Ignorable="d"
-        Title="TrackLyrics" Height="720" Width="1100" Background="#FF7A7A7A" Foreground="Black" Icon="/TextLyrics.png">
+        Title="TrackLyrics" Height="720" Width="1280" Background="Black" Foreground="Black" Icon="/TextLyrics.png" SizeToContent="Manual" ResizeMode="CanResize" MinWidth="1280" MinHeight="720">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="53*"/>
-            <ColumnDefinition Width="1227*"/>
-        </Grid.ColumnDefinitions>
         <Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="Black" Offset="1"/>
-                <GradientStop Color="#FF404040"/>
-                <GradientStop Color="#FF999999" Offset="0.358"/>
-                <GradientStop Color="#FF404040" Offset="0.759"/>
+                <GradientStop Color="Black" Offset="0.199"/>
+                <GradientStop Color="Black" Offset="0.984"/>
+                <GradientStop Color="#FF6C6C6C" Offset="0.59"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <TextBox Text="" HorizontalAlignment="Left" Height="44" Margin="10,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="190" x:Name="ImportTitle" Background="#FF4B4B4B" BorderBrush="Black" SelectionBrush="{x:Null}" Foreground="#FFA2A2A2" FontFamily="Arial Black" FontSize="16" TextAlignment="Center" TextChanged="ImportTitle_TextChanged" Grid.ColumnSpan="2"/>
-        <TextBox Text="" HorizontalAlignment="Left" Height="44" Margin="172,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="190" x:Name="ImportArtist" Background="#FF4C4C4C" BorderBrush="Black" SelectionBrush="{x:Null}" Foreground="#FFA2A2A2" FontFamily="Arial Black" FontSize="16" TextAlignment="Center" TextChanged="ImportArtist_TextChanged" Grid.Column="1"/>
-        <TextBox Text="" HorizontalAlignment="Left" Height="27" Margin="10,106,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="135" x:Name="Search" Background="#FF9B9C9C" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" Foreground="Black" FontFamily="Arial Black" FontSize="20" TextAlignment="Center" TextChanged="Search_TextChanged" AutomationProperties.Name="" Grid.ColumnSpan="2"/>
+        <TextBox Text="" HorizontalAlignment="Left" Height="35" Margin="720,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" x:Name="ImportTitle" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" FontFamily="Arial Black" FontSize="16" TextAlignment="Center" TextChanged="ImportTitle_TextChanged" Grid.Column="3" Grid.ColumnSpan="2">
+            <TextBox.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF00FF03"/>
+                    <GradientStop Color="#FF00F1FF" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBox.Foreground>
+            <TextBox.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF0600FF"/>
+                    <GradientStop Color="#FFFF0404" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBox.Background>
+        </TextBox>
+        <TextBox Text="" HorizontalAlignment="Left" Height="35" Margin="720,91,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" x:Name="ImportArtist" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" FontFamily="Arial Black" FontSize="16" TextAlignment="Center" TextChanged="ImportArtist_TextChanged" Grid.Column="3" Grid.ColumnSpan="2" SelectionTextBrush="White">
+            <TextBox.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF00FF03"/>
+                    <GradientStop Color="#FF00F1FF" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBox.Foreground>
+            <TextBox.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Red"/>
+                    <GradientStop Color="#FF0600FF" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBox.Background>
+        </TextBox>
+        <TextBox Text="" HorizontalAlignment="Left" Height="30" Margin="567,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="130" x:Name="Search" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" FontFamily="Mongolian Baiti" FontSize="18" TextAlignment="Center" TextChanged="Search_TextChanged" AutomationProperties.Name="" Grid.Column="2" Grid.ColumnSpan="2" FontWeight="Bold" SelectionTextBrush="White" RenderTransformOrigin="0.5,0.5" Foreground="#FF2A5C00">
+            <TextBox.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <LinearGradientBrush.RelativeTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </LinearGradientBrush.RelativeTransform>
+                    <GradientStop Color="#FFA2FF00" Offset="1"/>
+                    <GradientStop Color="#FFB1B1B1" Offset="0.5"/>
+                    <GradientStop Color="#FF005FFF"/>
+                </LinearGradientBrush>
+            </TextBox.Background>
+        </TextBox>
 
-        <ListBox Name="List_Track" Margin="10,138,0,10" BorderBrush="Black" Width="494" HorizontalAlignment="Left" Foreground="White" Grid.ColumnSpan="2" FontSize="14" FontWeight="Normal" FontFamily="Times New Roman" SelectionChanged="List_Track_SelectionChanged">
+        <ListBox Name="List_Track" Margin="10,10,0,0" BorderBrush="Black" Width="545" HorizontalAlignment="Left" FontWeight="Normal" FontFamily="Mongolian Baiti" SelectionChanged="List_Track_SelectionChanged" RenderTransformOrigin="0.5,0.5" Height="130" VerticalAlignment="Top" MaxWidth="545" MaxHeight="140">
+            <ListBox.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF00D0AE"/>
+                    <GradientStop Color="#FF00D0AE" Offset="1"/>
+                    <GradientStop Color="#FF909090" Offset="0.5"/>
+                </LinearGradientBrush>
+            </ListBox.Foreground>
             <ListBox.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FF939393"/>
-                    <GradientStop Color="#FF262626" Offset="1"/>
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="Red" Offset="0.95"/>
+                    <GradientStop Color="Black" Offset="1"/>
                 </LinearGradientBrush>
             </ListBox.Background>
+            <ListBox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleY="-0.218"/>
+                    <RotateTransform/>
+                    <TranslateTransform Y="-0.939"/>
+                </TransformGroup>
+            </ListBox.RenderTransform>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,2">
@@ -37,41 +90,212 @@
                         <TextBlock Margin="20, 0, 0, 0" Text="{Binding Title}"/>
                         <TextBlock Margin="220, 0, 0, 0" Text="{Binding Artist}"/>
 
-                        <Button Margin="290, 0, 0, 0" Width="20" Content="R" x:Name="Reload_Button" Click="Reload_Button_Click"/>
-                        <Button Margin="340, 0, 0, 0" Width="20" Content="S" x:Name="Set_Button" Click="Set_Button_Click"/>
-                        <Button Margin="390, 0, 0, 0" Width="20" Content="L" x:Name="Show_Lyrics_Button" Click="Show_Lyrics_Button_Click"/>
-                        <Button Margin="440, 0, 0, 0" Width="20" Content="D" x:Name="Delete_Button" Click="Delete_Button_Click"/>
+                        <Button Margin="430, 0, 0, 0" Width="80" Content="Show Lyrics" x:Name="Show_Lyrics_Button" Click="Show_Lyrics_Button_Click"/>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <ListBox Margin="466,10,10,10" x:Name="Lyrics" Foreground="White" SelectionChanged="Lyrics_SelectionChanged" FontFamily="Times New Roman" FontSize="18" BorderBrush="{x:Null}" Grid.Column="1">
+        <ListBox Margin="10,138,10,10" x:Name="Lyrics" SelectionChanged="Lyrics_SelectionChanged" FontFamily="Times New Roman" FontSize="36" BorderBrush="{x:Null}" Grid.ColumnSpan="4" FontWeight="Normal" Grid.Column="1">
+            <ListBox.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="White"/>
+                    <GradientStop Color="#FF004ED1" Offset="1"/>
+                    <GradientStop Color="#FF7BFA00" Offset="0.5"/>
+                </LinearGradientBrush>
+            </ListBox.Foreground>
             <ListBox.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="Black"/>
-                    <GradientStop Color="#FFB0B0B0" Offset="1"/>
+                    <GradientStop Color="Black" Offset="0"/>
+                    <GradientStop Color="#FF6C6C6C" Offset="0.5"/>
+                    <GradientStop Color="Black" Offset="1"/>
                 </LinearGradientBrush>
             </ListBox.Background>
         </ListBox>
-        <TextBox Text="" HorizontalAlignment="Left" Height="27" Margin="374,106,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="77" x:Name="SetLyrics_TextBox" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" Foreground="White" FontFamily="Times New Roman" FontSize="18" TextAlignment="Left" TextChanged="SetLyrics_TextBox_TextChanged" Grid.Column="1" SelectionTextBrush="{x:Null}">
+        <TextBox Text="" HorizontalAlignment="Left" Height="26" Margin="974,91,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="78" x:Name="SetLyrics_TextBox" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" FontFamily="Times New Roman" FontSize="36" TextAlignment="Left" TextChanged="SetLyrics_TextBox_TextChanged" SelectionTextBrush="{x:Null}">
+            <TextBox.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="White"/>
+                    <GradientStop Color="#FF004ED1" Offset="1"/>
+                    <GradientStop Color="#FF7BFA00" Offset="0.5"/>
+                </LinearGradientBrush>
+            </TextBox.Foreground>
             <TextBox.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="Black"/>
-                    <GradientStop Color="#FFB0B0B0" Offset="1"/>
+                    <GradientStop Color="#FF6C6C6C" Offset="0.5"/>
+                    <GradientStop Color="Black" Offset="1"/>
                 </LinearGradientBrush>
             </TextBox.Background>
         </TextBox>
 
 
-        <Button Content="Add" HorizontalAlignment="Left" Margin="374,34,0,0" VerticalAlignment="Top" Width="77" x:Name="Add_Button" Click="Add_Button_Click" Background="#FF9B9C9C" Height="44" FontSize="24" FontFamily="Arial Black" Grid.Column="1" />
-        <Button Content="Sort" HorizontalAlignment="Left" Margin="111,106,0,0" VerticalAlignment="Top" Width="77" x:Name="Sort_Button" Click="Sort_Button_Click" Background="#FF9B9C9C" Height="27" FontSize="14" FontFamily="Arial Black" Grid.Column="1" />
-        <Button Content="Original" HorizontalAlignment="Left" Margin="193,106,0,0" VerticalAlignment="Top" Width="78" x:Name="Original_Button" Click="Original_Button_Click" Background="#FF9B9B9B" Height="27" FontFamily="Arial Black" Grid.Column="1" FontSize="14" />
-        <Button Content="Reload All" HorizontalAlignment="Left" Margin="276,106,0,0" VerticalAlignment="Top" Width="86" x:Name="Reload_All_Button" Click="Reload_All_Button_Click" Background="#FF9B9C9C" Height="27" FontSize="14" FontFamily="Arial Black" Grid.Column="1" />
-        <Button Content="Upload T" HorizontalAlignment="Left" Margin="374,106,0,0" VerticalAlignment="Top" Width="77" x:Name="Upload_T_Button" Click="Upload_T_Button_Click" Background="#FF9B9C9C" Height="27" FontSize="14" FontFamily="Arial Black" Grid.Column="1" />
+        <Button Content="Add" HorizontalAlignment="Left" Margin="884,30,0,0" VerticalAlignment="Top" Width="60" x:Name="Add_Button" Click="Add_Button_Click" Height="96" FontSize="24" FontFamily="Tahoma" FontWeight="Bold" BorderBrush="{x:Null}" >
+            <Button.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF005C29"/>
+                    <GradientStop Color="#FF005C29" Offset="1"/>
+                    <GradientStop Color="Black" Offset="0.5"/>
+                </LinearGradientBrush>
+            </Button.Foreground>
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="White"/>
+                    <GradientStop Color="#FF00FF03" Offset="1"/>
+                    <GradientStop Color="#FF00E8FF" Offset="0.56"/>
+                    <GradientStop Color="#FF9CFF9C" Offset="0.26"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
 
-        <TextBlock Text="Artist" HorizontalAlignment="Left" Height="18" Margin="172,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="190" Grid.Column="1" TextAlignment="Center" Foreground="Black" FontWeight="Bold" FontSize="14"/>
-        <TextBlock Text="Title" HorizontalAlignment="Left" Height="18" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="190" TextAlignment="Center" Foreground="Black" FontWeight="Bold" FontSize="14" Grid.ColumnSpan="2"/>
-        <TextBlock Text="Search" HorizontalAlignment="Left" Height="18" Margin="30,83,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="94" TextAlignment="Center" Foreground="Black" FontWeight="Bold" FontSize="14" Grid.ColumnSpan="2"/>
+        <Button Content="Sort" HorizontalAlignment="Left" Margin="567,96,0,0" VerticalAlignment="Top" Width="130" x:Name="Sort_Button" Click="Sort_Button_Click" Height="30" FontSize="18" FontFamily="Tahoma" Grid.Column="2" Grid.ColumnSpan="2" FontWeight="Bold" BorderBrush="{x:Null}" >
+            <Button.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF0098DA" Offset="0"/>
+                    <GradientStop Color="#FF00C248" Offset="1"/>
+                    <GradientStop Color="#FF494949" Offset="0.5"/>
+                </LinearGradientBrush>
+            </Button.Foreground>
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF00FFF1"/>
+                    <GradientStop Color="#FF00B1FF" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
+        <Button Content="Original" HorizontalAlignment="Left" Margin="567,63,0,0" VerticalAlignment="Top" Width="130" x:Name="Original_Button" Click="Original_Button_Click" Height="30" FontFamily="Tahoma" Grid.Column="2" FontSize="18" Grid.ColumnSpan="2" FontWeight="Bold" BorderBrush="{x:Null}" >
+            <Button.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF00C248" Offset="0.002"/>
+                    <GradientStop Color="#FF00B1FF" Offset="1"/>
+                    <GradientStop Color="#FF494949" Offset="0.5"/>
+                </LinearGradientBrush>
+            </Button.Foreground>
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF00B1FF"/>
+                    <GradientStop Color="#FF00FFF1" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
+
+        <Button Content="Reload All" HorizontalAlignment="Left" Margin="964,30,0,0" VerticalAlignment="Top" Width="98" x:Name="Reload_All_Button" Click="Reload_All_Button_Click" Height="96" FontSize="18" FontFamily="Tahoma" FontWeight="Bold" BorderBrush="{x:Null}" >
+            <Button.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF59D2FF"/>
+                    <GradientStop Color="#FF587EFF" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.Foreground>
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="Black" Offset="1"/>
+                    <GradientStop Color="Red" Offset="0.75"/>
+                    <GradientStop Color="Black" Offset="0.5"/>
+                    <GradientStop Color="Red" Offset="0.25"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
+        <Button Content="Upload T" HorizontalAlignment="Left" Margin="1095,96,0,0" VerticalAlignment="Top" Width="85" x:Name="Upload_T_Button" Click="Upload_T_Button_Click" Height="30" FontSize="14" FontFamily="Tahoma" FontWeight="Bold" BorderBrush="{x:Null}" IsEnabled="False" >
+            <Button.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFCDF99C"/>
+                    <GradientStop Color="#FF99FF00" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.Foreground>
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF0600FF"/>
+                    <GradientStop Color="#FF0600FF" Offset="1"/>
+                    <GradientStop Color="#FF8B8ABD" Offset="0.5"/>
+                    <GradientStop Color="#FF7774F9" Offset="0.25"/>
+                    <GradientStop Color="#FF7774F9" Offset="0.75"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
+        <Button Content="Reload" HorizontalAlignment="Left" Margin="1185,58,0,0" VerticalAlignment="Top" Width="85" x:Name="Reload_Button" Click="Reload_Button_Click" Height="30" FontSize="14" FontFamily="Tahoma" FontWeight="Bold" BorderBrush="{x:Null}" IsEnabled="False" >
+            <Button.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFCDF99C"/>
+                    <GradientStop Color="#FF99FF00" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.Foreground>
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF0600FF"/>
+                    <GradientStop Color="#FF0600FF" Offset="1"/>
+                    <GradientStop Color="#FF8B8ABD" Offset="0.5"/>
+                    <GradientStop Color="#FF7774F9" Offset="0.25"/>
+                    <GradientStop Color="#FF7774F9" Offset="0.75"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
+        <Button Content="Set to Add" HorizontalAlignment="Left" Margin="1095,58,0,0" VerticalAlignment="Top" Width="85" x:Name="Set_Button" Click="Set_Button_Click" Height="30" FontSize="14" FontFamily="Tahoma" FontWeight="Bold" BorderBrush="{x:Null}" IsEnabled="False" >
+            <Button.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFCDF99C"/>
+                    <GradientStop Color="#FF99FF00" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.Foreground>
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF8B8ABD" Offset="0.5"/>
+                    <GradientStop Color="#FF0600FF" Offset="1"/>
+                    <GradientStop Color="#FF0600FF" Offset="0"/>
+                    <GradientStop Color="#FF7774F9" Offset="0.25"/>
+                    <GradientStop Color="#FF7774F9" Offset="0.75"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
+        <Button Content="Delete" HorizontalAlignment="Left" Margin="1185,96,0,0" VerticalAlignment="Top" Width="85" x:Name="Delete_Button" Click="Delete_Button_Click" Height="30" FontSize="14" FontFamily="Tahoma" FontWeight="Bold" BorderBrush="{x:Null}" IsEnabled="False" >
+            <Button.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFCDF99C"/>
+                    <GradientStop Color="#FF99FF00" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.Foreground>
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF0600FF"/>
+                    <GradientStop Color="#FF0600FF" Offset="1"/>
+                    <GradientStop Color="#FF8B8ABD" Offset="0.5"/>
+                    <GradientStop Color="#FF7774F9" Offset="0.25"/>
+                    <GradientStop Color="#FF7774F9" Offset="0.75"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
+
+        <TextBlock Text="Artist" HorizontalAlignment="Left" Height="20" Margin="720,71,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" TextAlignment="Center" FontWeight="Bold" FontSize="14" Grid.Column="3" Grid.ColumnSpan="2">
+            <TextBlock.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFA0A0A0"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBlock.Foreground>
+        </TextBlock>
+        <TextBlock Text="Title" HorizontalAlignment="Left" Height="20" Margin="720,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" TextAlignment="Center" FontWeight="Bold" FontSize="14" Grid.Column="3" Grid.ColumnSpan="2">
+            <TextBlock.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFA0A0A0"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBlock.Foreground>
+        </TextBlock>
+        <TextBlock Text="Search" HorizontalAlignment="Left" Height="18" Margin="567,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="130" TextAlignment="Center" FontWeight="Bold" FontSize="14">
+            <TextBlock.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFA0A0A0"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBlock.Foreground>
+        </TextBlock>
+        <TextBlock Text="Track Zone" HorizontalAlignment="Left" Height="20" Margin="1095,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="175" TextAlignment="Center" FontWeight="Bold" FontSize="14">
+            <TextBlock.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFA0A0A0"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBlock.Foreground>
+        </TextBlock>
     </Grid>
 </Window>

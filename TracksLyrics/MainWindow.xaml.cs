@@ -80,11 +80,9 @@ namespace TracksLyrics
 
         private void Reload_Button_Click(object sender, RoutedEventArgs e)
         {
-            var listitem = sender as Button;
-            var track = listitem.DataContext as Track;
+            var track = SelectedTrack as Track;
 
-            List_Track.SelectedItem = listitem.DataContext;
-            List_Track.Items.Remove(List_Track.SelectedItem);
+            List_Track.Items.Remove(SelectedTrack);
 
             tracks.Remove(track);
             CreateTrack(new Track() { Artist = track.Artist, Title = track.Title });
@@ -120,21 +118,21 @@ namespace TracksLyrics
 
             if (isOriginal || track.ruTitle == "NLT")
             {
-                Lyrics.Items.Add(track.Title);
-                Lyrics.Items.Add("");
+                Lyrics.Items.Add("\t" + track.Title);
+                Lyrics.Items.Add("\t" + "");
 
                 var enLyric = track.enLyrics.Split('\n');
 
                 for (int i = 0; i < enLyric.Length; i++)
-                    Lyrics.Items.Add(enLyric[i]);
+                    Lyrics.Items.Add("\t" + enLyric[i]);
 
                 SetLyrics_TextBox.Text = (track.Title) + "\n\n" + track.enLyrics;
             }
             else
             {
-                Lyrics.Items.Add(track.Title);
-                Lyrics.Items.Add(track.ruTitle);
-                Lyrics.Items.Add("");
+                Lyrics.Items.Add("\t" + track.Title);
+                Lyrics.Items.Add("\t" + track.ruTitle);
+                Lyrics.Items.Add("\t" + "");
 
                 var enLyric = track.enLyrics.Split('\n').ToList();
                 var ruLyric = track.ruLyrics.Split('\n').ToList();
@@ -143,21 +141,27 @@ namespace TracksLyrics
                     while (enLyric.Count != ruLyric.Count)
                     {
                         if (enLyric.Count > ruLyric.Count)
-                            ruLyric.Add("");
+                            ruLyric.Add("\t" + "");
                         else
-                            enLyric.Add("");
+                            enLyric.Add("\t" + "");
                     }
 
                 for (int i = 0; i < enLyric.Count; i++)
                 {
-                    Lyrics.Items.Add(enLyric[i]);
-                    Lyrics.Items.Add(ruLyric[i]);
-                    Lyrics.Items.Add("");
+                    Lyrics.Items.Add("\t" + enLyric[i]);
+                    Lyrics.Items.Add("\t" + ruLyric[i]);
+                    Lyrics.Items.Add("\t" + "");
                 }
 
                 SetLyrics_TextBox.Text = (track.ruTitle) + "\n\n" + track.ruLyrics;
             }
             SelectedTrack = listitem.DataContext;
+
+
+            Set_Button.IsEnabled = true;
+            Delete_Button.IsEnabled = true;
+            Reload_Button.IsEnabled = true;
+            Upload_T_Button.IsEnabled = true;
         }
 
         private void Show_Lyrics_Button_Click(Track track)
@@ -166,21 +170,21 @@ namespace TracksLyrics
 
             if (isOriginal || track.ruTitle == "NLT")
             {
-                Lyrics.Items.Add(track.Title);
-                Lyrics.Items.Add("");
+                Lyrics.Items.Add("\t" + track.Title);
+                Lyrics.Items.Add("\t" + "");
 
                 var enLyric = track.enLyrics.Split('\n');
 
                 for (int i = 0; i < enLyric.Length; i++)
-                    Lyrics.Items.Add(enLyric[i]);
+                    Lyrics.Items.Add("\t" + enLyric[i]);
 
                 SetLyrics_TextBox.Text = (track.Title) + "\n\n" + track.enLyrics;
             }
             else
             {
-                Lyrics.Items.Add(track.Title);
-                Lyrics.Items.Add(track.ruTitle);
-                Lyrics.Items.Add("");
+                Lyrics.Items.Add("\t" + track.Title);
+                Lyrics.Items.Add("\t" + track.ruTitle);
+                Lyrics.Items.Add("\t" + "");
 
                 var enLyric = track.enLyrics.Split('\n').ToList();
                 var ruLyric = track.ruLyrics.Split('\n').ToList();
@@ -189,16 +193,16 @@ namespace TracksLyrics
                     while (enLyric.Count != ruLyric.Count)
                     {
                         if (enLyric.Count > ruLyric.Count)
-                            ruLyric.Add("");
+                            ruLyric.Add("\t" + "");
                         else
-                            enLyric.Add("");
+                            enLyric.Add("\t" + "");
                     }
 
                 for (int i = 0; i < enLyric.Count; i++)
                 {
-                    Lyrics.Items.Add(enLyric[i]);
-                    Lyrics.Items.Add(ruLyric[i]);
-                    Lyrics.Items.Add("");
+                    Lyrics.Items.Add("\t" + enLyric[i]);
+                    Lyrics.Items.Add("\t" + ruLyric[i]);
+                    Lyrics.Items.Add("\t" + "");
                 }
 
                 SetLyrics_TextBox.Text = (track.ruTitle) + "\n\n" + track.ruLyrics;
@@ -360,14 +364,9 @@ namespace TracksLyrics
                 Upload_T_Button.Background = new SolidColorBrush(Color.FromArgb(255, 155, 155, 155));
                 Upload_T_Button.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
 
-                SetLyrics_TextBox.Margin = new Thickness(374, 106, 0, 0);
+                SetLyrics_TextBox.Margin = new Thickness(964, 30, 0, 0);
                 SetLyrics_TextBox.Width = 1;
                 SetLyrics_TextBox.Height = 1;
-
-                Lyrics.Margin = new Thickness(466, 10, 10, 10);
-                Lyrics.Width = 578;
-                Lyrics.Height = 684;
-
 
                 if (isOriginal)
                     ResetEnLyrics(SetLyrics_TextBox.Text);
@@ -379,13 +378,9 @@ namespace TracksLyrics
                 Upload_T_Button.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
                 Upload_T_Button.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
 
-                SetLyrics_TextBox.Margin = new Thickness(466, 10, 10, 10);
-                SetLyrics_TextBox.Width = 578;
-                SetLyrics_TextBox.Height = 684;
-
-                Lyrics.Margin = new Thickness(374, 106, 0, 0);
-                Lyrics.Width = 1;
-                Lyrics.Height = 1;
+                SetLyrics_TextBox.Margin = new Thickness(10, 138, 10, 10);
+                SetLyrics_TextBox.Height = 556;
+                SetLyrics_TextBox.Width = 1260;
             }
 
             isUpload = !isUpload;
