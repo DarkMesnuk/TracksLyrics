@@ -65,17 +65,26 @@ namespace TracksLyrics
         {
             CreateTrack(new Track() { Artist = artist, Title = title });
 
-            ImportTitle.Text = "";
-            ImportArtist.Text = "";
+            Import.Text = "";
         }
 
         private void Reload_All_Button_Click(object sender, RoutedEventArgs e)
         {
-            var preTracks = tracks.ToArray();
-            tracks.Clear();
+            Confirm_Reload_All_Button.IsEnabled = true;
+            Cancel_Reload_All_Button.IsEnabled = true;
 
-            foreach(var track in preTracks)
-                CreateTrack(new Track() { Artist = track.Artist, Title = track.Title });
+            Confirm_Reload_All_Button.Margin = new Thickness(450, 375, 0, 0);
+            Confirm_Reload_All_Button.Width = 160;
+            Confirm_Reload_All_Button.Height = 40;
+
+            Cancel_Reload_All_Button.Margin = new Thickness(670, 375, 0, 0);
+            Cancel_Reload_All_Button.Width = 160;
+            Cancel_Reload_All_Button.Height = 40;
+
+            Reload_All_BackGround.Margin = new Thickness(0, 0, 0, 0);
+            Reload_All_BackGround.Width = 1280;
+            Reload_All_BackGround.Height = 704;
+
         }
 
         private void Reload_Button_Click(object sender, RoutedEventArgs e)
@@ -103,10 +112,8 @@ namespace TracksLyrics
 
         private void Set_Button_Click(object sender, RoutedEventArgs e)
         {
-            var listitem = sender as Button;
-            var track = listitem.DataContext as Track;
-            ImportTitle.Text = track.Title;
-            ImportArtist.Text = track.Artist;
+            var track = SelectedTrack as Track;
+            Import.Text = track.Title + "/" + track.Artist;
         }
 
         private void Show_Lyrics_Button_Click(object sender, RoutedEventArgs e)
@@ -162,6 +169,7 @@ namespace TracksLyrics
             Delete_Button.IsEnabled = true;
             Reload_Button.IsEnabled = true;
             Upload_T_Button.IsEnabled = true;
+            Lyrics.ScrollIntoView(Lyrics.Items[0]);
         }
 
         private void Show_Lyrics_Button_Click(Track track)
@@ -207,6 +215,8 @@ namespace TracksLyrics
 
                 SetLyrics_TextBox.Text = (track.ruTitle) + "\n\n" + track.ruLyrics;
             }
+
+            Lyrics.ScrollIntoView(Lyrics.Items[0]);
         }
 
         private void Sort_Button_Click(object sender, RoutedEventArgs e)
@@ -384,6 +394,51 @@ namespace TracksLyrics
             }
 
             isUpload = !isUpload;
+        }
+
+        private void Confirm_Reload_All_Button_Click(object sender, RoutedEventArgs e)
+        {
+            var preTracks = tracks.ToArray();
+            tracks.Clear();
+
+            foreach (var track in preTracks)
+                CreateTrack(new Track() { Artist = track.Artist, Title = track.Title });
+
+
+            Confirm_Reload_All_Button.IsEnabled = false;
+            Cancel_Reload_All_Button.IsEnabled = false;
+
+
+            Confirm_Reload_All_Button.Margin = new Thickness(892, 84, 0, 0);
+            Confirm_Reload_All_Button.Width = 1;
+            Confirm_Reload_All_Button.Height = 1;
+
+            Cancel_Reload_All_Button.Margin = new Thickness(892, 84, 0, 0);
+            Cancel_Reload_All_Button.Width = 1;
+            Cancel_Reload_All_Button.Height = 1;
+
+            Reload_All_BackGround.Margin = new Thickness(892, 84, 228, 0);
+            Reload_All_BackGround.Width = 1;
+            Reload_All_BackGround.Height = 1;
+        }
+
+        private void Cancel_Reload_All_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Confirm_Reload_All_Button.IsEnabled = false;
+            Cancel_Reload_All_Button.IsEnabled = false;
+
+
+            Confirm_Reload_All_Button.Margin = new Thickness(892, 84, 228, 0);
+            Confirm_Reload_All_Button.Width = 1;
+            Confirm_Reload_All_Button.Height = 1;
+
+            Cancel_Reload_All_Button.Margin = new Thickness(892, 84, 228, 0);
+            Cancel_Reload_All_Button.Width = 1;
+            Cancel_Reload_All_Button.Height = 1;
+
+            Reload_All_BackGround.Margin = new Thickness(892, 84, 228, 0);
+            Reload_All_BackGround.Width = 1;
+            Reload_All_BackGround.Height = 1;
         }
         #endregion
         /**/
@@ -1129,14 +1184,14 @@ namespace TracksLyrics
         #endregion
         /**/
         #region MainWindow
-        private void ImportArtist_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            artist = ImportArtist.Text;
-        }
 
-        private void ImportTitle_TextChanged(object sender, TextChangedEventArgs e)
+        private void Import_TextChanged(object sender, TextChangedEventArgs e)
         {
-            title = ImportTitle.Text;
+            var text = Import.Text.Split('/');
+            title = text[0];
+            if (text.Length >= 2)
+                artist = text[1];
+
         }
 
         private void SetLyrics_TextBox_TextChanged(object sender, TextChangedEventArgs e)
