@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <LangVersion>11</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TracksLyrics.Application\TracksLyrics.Application.csproj" />
+    <ProjectReference Include="..\TracksLyrics.Repository.File\TracksLyrics.Repository.File.csproj" />
+    <ProjectReference Include="..\TracksLyrics.Search\TracksLyrics.Search.csproj" />
+    <ProjectReference Include="..\TracksLyrics.Services\TracksLyrics.Services.csproj" />
+  </ItemGroup>
+
+</Project>
