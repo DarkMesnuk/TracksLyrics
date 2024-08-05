@@ -16,7 +16,7 @@ public static class ServiceCollectionExtensions
         services.AddAutoMapper(typeof(DtosMappings).Assembly);
         
         return services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetLyricsCommandHandler).Assembly))
-            .AddValidatorsFromAssembly(typeof(GetCurrentTrackLyricRequestValidator).Assembly)
+            .AddValidatorsFromAssembly(typeof(GetTrackLyricRequestValidator).Assembly)
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
     }
 }

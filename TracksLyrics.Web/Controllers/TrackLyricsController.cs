@@ -18,11 +18,11 @@ public class TrackLyricsController(
     ) : BaseApiController(logger, mapper, mediator)
 {
     [HttpGet]
-    [Route("get-current")]
+    [Route("get")]
     [ProducesResponseType(typeof(GetTrackLyricResponse), 200)]
-    public async Task<IActionResult> GetCurrentLyrics([FromQuery] GetCurrentTrackLyricRequest request)
+    public async Task<IActionResult> GetLyrics([FromQuery] GetTrackLyricRequest request)
     {
-        var getRequest = Mapper.Map<GetCurrentTrackLyricQueryRequest>(request);
+        var getRequest = Mapper.Map<GetTrackLyricQueryRequest>(request);
 
         var applicationResponse = await Mediator.Send(getRequest);
 

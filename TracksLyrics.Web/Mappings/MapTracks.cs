@@ -8,7 +8,7 @@ public partial class RequestsMappings
 {
     private void CreateMapTracks()
     {
-        CreateMap<GetCurrentTrackLyricRequest, GetCurrentTrackLyricQueryRequest>();
+        CreateMap<GetTrackLyricRequest, GetTrackLyricQueryRequest>();
         CreateMap<SetLyricToCurrentTrackRequest, SetLyricToCurrentTrackCommandRequest>();
         CreateMap<ScanAndParseCurrentPlaylistRequest, ScanAndParseCurrentPlaylistCommandRequest>();
         
