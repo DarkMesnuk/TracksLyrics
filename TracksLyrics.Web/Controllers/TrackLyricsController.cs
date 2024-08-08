@@ -34,6 +34,23 @@ public class TrackLyricsController(
         return Ok(response);
     }
     
+    [HttpGet]
+    [Route("get-lyric-by-artists-and-title")]
+    [ProducesResponseType(typeof(GetTrackLyricResponse), 200)]
+    public async Task<IActionResult> GetLyricByArtistsAndTitle([FromQuery] GetTrackRequest request)
+    {
+        var getRequest = Mapper.Map<GetLyricsCommandRequest>(request);
+
+        var applicationResponse = await Mediator.Send(getRequest);
+
+        if (!applicationResponse.IsSucceeded)
+            return applicationResponse.GetActionResult();
+
+        var response = new GetTrackLyricResponse(applicationResponse.Dto);
+
+        return Ok(response);
+    }
+    
     [HttpPost]
     [Route("set-lyric-to-current")]
     public async Task<IActionResult> SetLyricToCurrentTrack([FromBody] SetLyricToCurrentTrackRequest request)
