@@ -14,7 +14,7 @@ namespace TracksLyrics.Application.Handlers;
 public class ScanAndParseCurrentPlaylistCommandHandler(
     ILogger<ScanAndParseCurrentPlaylistCommandHandler> logger,
     IMemoryCache memoryCache,
-    ITrackLyricsService trackLyricsService,
+    ITrackLyricService trackLyricService,
     IParsersService parsersService,
     ISpotifyControlService spotifyControlService
 ) : BaseHandler<ScanAndParseCurrentPlaylistCommandHandler, ScanAndParseCurrentPlaylistCommandRequest, ScanAndParseCurrentPlaylistCommandResponse>(logger)
@@ -34,7 +34,7 @@ public class ScanAndParseCurrentPlaylistCommandHandler(
         
         do
         {
-            await trackLyricsService.ParseAndSaveTrackLyricAsync(currentTrack!, parsersService);
+            await trackLyricService.ParseAndSaveTrackLyricAsync(currentTrack!, parsersService);
 
             bool isSendNextCommand;
             

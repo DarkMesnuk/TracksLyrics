@@ -11,8 +11,8 @@ using TracksLyrics.Repository.DataBase;
 namespace TracksLyrics.Repository.DataBase.Migrations
 {
     [DbContext(typeof(TracksLyricsContext))]
-    [Migration("20240728225536_Initial")]
-    partial class Initial
+    [Migration("20240729121855_AddNullableToLyricJson")]
+    partial class AddNullableToLyricJson
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace TracksLyrics.Repository.DataBase.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("TracksLyrics.Repository.DataBase.Entities.TrackLyricEntity", b =>
+            modelBuilder.Entity("TracksLyrics.Repository.DataBase.Postgre.Entities.TrackLyricEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -37,7 +37,6 @@ namespace TracksLyrics.Repository.DataBase.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("LyricsJson")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -45,7 +44,6 @@ namespace TracksLyrics.Repository.DataBase.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TranslatedLyricsJson")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");

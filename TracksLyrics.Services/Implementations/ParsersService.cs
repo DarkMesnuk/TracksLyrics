@@ -1,6 +1,7 @@
 ﻿using TracksLyrics.Domain.Interfaces.Parsers;
 using TracksLyrics.Domain.Interfaces.Services;
 using TracksLyrics.Domain.Models;
+using TracksLyrics.Domain.Models.Mongo;
 
 namespace TracksLyrics.Services.Implementations;
 
@@ -10,7 +11,7 @@ public class ParsersService(
     IMusixmatchParserService musixmatchParserService
 ) : IParsersService
 {
-    public async Task<TrackLyricModel> ParsOrDefaultAsync(TrackInfoModel trackInfo)
+    public async Task<TrackModel> ParsOrDefaultAsync(TrackInfoModel trackInfo)
     {
         // var trackLyricMus = await musixmatchParserService.ParsAsync(trackInfo);
         //

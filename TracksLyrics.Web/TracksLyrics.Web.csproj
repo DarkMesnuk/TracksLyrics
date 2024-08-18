@@ -19,7 +19,8 @@
     <ItemGroup>
       <ProjectReference Include="..\Requestor\Requestor.csproj" />
       <ProjectReference Include="..\TracksLyrics.Application\TracksLyrics.Application.csproj" />
-      <ProjectReference Include="..\TracksLyrics.Repository.DataBase\TracksLyrics.Repository.DataBase.csproj" />
+      <ProjectReference Include="..\TracksLyrics.Repository.DataBase.Mongo\TracksLyrics.Repository.DataBase.Mongo.csproj" />
+      <ProjectReference Include="..\TracksLyrics.Repository.DataBase.Postgre\TracksLyrics.Repository.DataBase.Postgre.csproj" />
       <ProjectReference Include="..\TracksLyrics.Repository.File\TracksLyrics.Repository.File.csproj" />
       <ProjectReference Include="..\TracksLyrics.Search\TracksLyrics.Search.csproj" />
       <ProjectReference Include="..\TracksLyrics.Services\TracksLyrics.Services.csproj" />

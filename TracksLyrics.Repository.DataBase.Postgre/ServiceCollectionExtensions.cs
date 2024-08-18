@@ -9,7 +9,7 @@ namespace TracksLyrics.Repository.DataBase;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddDatabase(this IServiceCollection services, string connectionString, int poolSize)
+    public static IServiceCollection AddPostgreDatabase(this IServiceCollection services, string connectionString, int poolSize)
     {
         services.AddEntityFrameworkNpgsql()
             .AddDbContextPool<TracksLyricsContext>(

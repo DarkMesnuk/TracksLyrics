@@ -1,6 +1,7 @@
 ﻿using TracksLyrics.Domain.Interfaces.Parsers;
 using TracksLyrics.Domain.Interfaces.Repositories;
 using TracksLyrics.Domain.Interfaces.Services;
+using TracksLyrics.Repository.DataBase.Mongo.Repositories;
 using TracksLyrics.Repository.File.Repositories;
 using TracksLyrics.Search.Parsers;
 using TracksLyrics.Services.Implementations;
@@ -18,7 +19,7 @@ public class Di
         MusixmatchParserService = new MusixmatchParserService();
         TrackLyricsRepository = new TrackLyricsFileRepository();
         TransmitterMusicService = new TransmitterMusicService();
-        TrackLyricsService = new TrackLyricsService(TrackLyricsRepository);
+        //TrackLyricService = new TrackLyricLyricsService(TrackRepository, LyricRepository, TranslatedLyricRepository);
         ParsersService = new ParsersService(MuztextParserService, GeniusParserService, MusixmatchParserService);
     }
 
@@ -27,6 +28,6 @@ public class Di
     public static IGeniusParserService GeniusParserService { get; private set; }
     public static IMusixmatchParserService MusixmatchParserService  { get; private set; }
     public static ITransmitterMusicService TransmitterMusicService { get; private set; }
-    public static ITrackLyricsService TrackLyricsService { get; private set; }
+    public static ITrackLyricService TrackLyricService { get; private set; }
     public static IParsersService ParsersService { get; private set; }
 }

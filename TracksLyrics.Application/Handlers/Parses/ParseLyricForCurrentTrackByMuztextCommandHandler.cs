@@ -17,7 +17,7 @@ namespace TracksLyrics.Application.Handlers.Parses;
 public class ParseLyricForCurrentTrackByMuztextCommandHandler(
     ILogger<ParseLyricForCurrentTrackByMuztextCommandHandler> logger,
     IMemoryCache memoryCache,
-    ITrackLyricsService trackLyricsService,
+    ITrackLyricService trackLyricService,
     IMuztextParserService muztextParserService
 ) : BaseHandler<ParseLyricForCurrentTrackByMuztextCommandHandler, ParseLyricForCurrentTrackByMuztextCommandRequest, ParseLyricForCurrentTrackByMuztextCommandResponse>(logger)
 {
@@ -33,7 +33,7 @@ public class ParseLyricForCurrentTrackByMuztextCommandHandler(
         if (!trackLyric.IsFinded)
             throw new NotFoundException(nameof(TrackLyricModel));
 
-        await trackLyricsService.UpdateLyricsAsync(trackLyric);
+        await trackLyricService.UpdateLyricsAsync(trackLyric);
 
         return result;
     }

@@ -16,7 +16,7 @@ namespace TracksLyrics.Application.Handlers;
 public class SetLyricToCurrentTrackCommandHandler(
     ILogger<SetLyricToCurrentTrackCommandHandler> logger,
     IMemoryCache memoryCache,
-    ITrackLyricsService trackLyricsService
+    ITrackLyricService trackLyricService
 ) : BaseHandler<SetLyricToCurrentTrackCommandHandler, SetLyricToCurrentTrackCommandRequest, SetLyricToCurrentTrackCommandResponse>(logger)
 {
     public override async Task<SetLyricToCurrentTrackCommandResponse> Handle(SetLyricToCurrentTrackCommandRequest request, CancellationToken cancellationToken)
@@ -26,7 +26,7 @@ public class SetLyricToCurrentTrackCommandHandler(
         if (!memoryCache.TryGetValue(TrackInfoConsts.CacheName, out TrackInfoModel? trackInfo) && trackInfo.IsNullOrDefault())
             throw new NotFoundException(nameof(TrackInfoModel));
 
-        await trackLyricsService.SetLyricToTrackAsync(trackInfo!, request);
+        await trackLyricService.SetLyricToTrackAsync(trackInfo!, request);
 
         return result;
     }

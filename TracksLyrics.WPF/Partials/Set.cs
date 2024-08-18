@@ -121,14 +121,14 @@ public partial class MainWindow
         }));
     }
 
-    private async Task<TrackLyricDto?> GetTrackLyric(TrackInfoModel trackInfo)
+    private async Task<TrackDto?> GetTrackLyric(TrackInfoModel trackInfo)
     {
         var request = new GetLyricsCommandRequest
         {
             TrackInfo = trackInfo
         };
 
-        var handler = new GetLyricsCommandHandler(TrackLyricsService, ParsersService);
+        var handler = new GetLyricsCommandHandler(TrackLyricService, ParsersService);
 
         try
         {

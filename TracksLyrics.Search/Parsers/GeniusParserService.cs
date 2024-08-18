@@ -1,13 +1,14 @@
 ﻿using HtmlAgilityPack;
 using TracksLyrics.Domain.Interfaces.Parsers;
 using TracksLyrics.Domain.Models;
+using TracksLyrics.Domain.Models.Mongo;
 using TracksLyrics.Search.Extensions;
 
 namespace TracksLyrics.Search.Parsers;
 
 public class GeniusParserService : IGeniusParserService
 {
-    public async Task<TrackLyricModel> ParsAsync(string url, TrackInfoModel track)
+    public async Task<TrackModel> ParsAsync(string url, TrackInfoModel track)
     {
         var document = await new HtmlWeb().LoadFromWebAsync(url);
         HtmlNodeCollection? mainNodes;
@@ -24,7 +25,7 @@ public class GeniusParserService : IGeniusParserService
 
         if (mainNodes == null)
         {
-            return new TrackLyricModel {
+            return new TrackModel {
                 Name = track.Name,
                 Artist = track.Artist
             };
@@ -32,7 +33,7 @@ public class GeniusParserService : IGeniusParserService
 
         var lyrics = mainNodes.SelectMany(x => ParseLyrics(x.InnerHtml)).Select(ExtractText).ToList();
 
-        return new TrackLyricModel(track.Name, track.Artist, lyrics);
+        return new TrackModel(track.Name, track.Artist, lyrics);
     }
     
     private static string ExtractText(string html)
@@ -43,7 +44,7 @@ public class GeniusParserService : IGeniusParserService
         return htmlDocument.DocumentNode.InnerText;
     }
     
-    public Task<TrackLyricModel> ParsAsync(TrackInfoModel track)
+    public Task<TrackModel> ParsAsync(TrackInfoModel track)
     {
         return ParsAsync(CreateUrl(track), track);
     }

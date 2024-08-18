@@ -2,4 +2,4 @@
 
 namespace TracksLyrics.Web.Responses;
 
-public record GetTrackLyricResponse(TrackLyricDto TrackLyric);
+public record GetTrackLyricResponse(TrackDto TrackLyric);

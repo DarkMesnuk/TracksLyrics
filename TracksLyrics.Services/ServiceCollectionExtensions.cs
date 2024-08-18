@@ -9,7 +9,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
         return services
-            .AddScoped<ITrackLyricsService, TrackLyricsService>()
+            .AddScoped<ITrackLyricService, TrackLyricLyricsService>()
             .AddScoped<ITransmitterMusicService, TransmitterMusicService>()
             .AddScoped<IParsersService, ParsersService>()
             .AddScoped<ISpotifyControlService, SpotifyControlService>();

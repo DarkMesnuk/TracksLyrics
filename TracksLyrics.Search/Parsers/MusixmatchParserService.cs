@@ -1,13 +1,14 @@
 ﻿using HtmlAgilityPack;
 using TracksLyrics.Domain.Interfaces.Parsers;
 using TracksLyrics.Domain.Models;
+using TracksLyrics.Domain.Models.Mongo;
 using TracksLyrics.Search.Extensions;
 
 namespace TracksLyrics.Search.Parsers;
 
 public class MusixmatchParserService : IMusixmatchParserService
 {
-    public Task<TrackLyricModel> ParsAsync(string url, TrackInfoModel track)
+    public Task<TrackModel> ParsAsync(string url, TrackInfoModel track)
     {
         // if (url.Contains("/translation/ukrainian"))
         //     return ParsTranslationAsync(url, track);
@@ -15,7 +16,7 @@ public class MusixmatchParserService : IMusixmatchParserService
             return ParsOriginalAsync(url, track);
     }
 
-    private async Task<TrackLyricModel> ParsOriginalAsync(string url, TrackInfoModel track)
+    private async Task<TrackModel> ParsOriginalAsync(string url, TrackInfoModel track)
     {
         var httpClient = new HttpClient();
         var response = await httpClient.GetStringAsync(url);
@@ -51,10 +52,10 @@ public class MusixmatchParserService : IMusixmatchParserService
             Console.WriteLine("No translation found.");
         }
         
-        return new TrackLyricModel(track.Name, track.Artist, new List<string>());
+        return new TrackModel(track.Name, track.Artist, new List<string>());
     }
 
-    private async Task<TrackLyricModel> ParsTranslationAsync(string url, TrackInfoModel track)
+    private async Task<TrackModel> ParsTranslationAsync(string url, TrackInfoModel track)
     {
        
         var httpClient = new HttpClient();
@@ -91,7 +92,7 @@ public class MusixmatchParserService : IMusixmatchParserService
             Console.WriteLine("No translation found.");
         }
         
-        return new TrackLyricModel(track.Name, track.Artist, new List<string>());
+        return new TrackModel(track.Name, track.Artist, new List<string>());
     }
 
 
@@ -103,7 +104,7 @@ public class MusixmatchParserService : IMusixmatchParserService
         return htmlDocument.DocumentNode.InnerText;
     }
     
-    public async Task<TrackLyricModel> ParsAsync(TrackInfoModel track)
+    public async Task<TrackModel> ParsAsync(TrackInfoModel track)
     {
         var trackLyrics = await ParsTranslationAsync(CreateUrlWithTranslation(track), track);
         

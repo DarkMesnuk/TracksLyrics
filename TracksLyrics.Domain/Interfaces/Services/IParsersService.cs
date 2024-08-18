@@ -1,8 +1,9 @@
 ﻿using TracksLyrics.Domain.Models;
+using TracksLyrics.Domain.Models.Mongo;
 
 namespace TracksLyrics.Domain.Interfaces.Services;
 
 public interface IParsersService
 {
-    Task<TrackLyricModel> ParsOrDefaultAsync(TrackInfoModel trackInfo);
+    Task<TrackModel> ParsOrDefaultAsync(TrackInfoModel trackInfo);
 }

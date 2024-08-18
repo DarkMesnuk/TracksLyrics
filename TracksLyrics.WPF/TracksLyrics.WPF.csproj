@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TracksLyrics.Application\TracksLyrics.Application.csproj" />
+    <ProjectReference Include="..\TracksLyrics.Repository.DataBase.Mongo\TracksLyrics.Repository.DataBase.Mongo.csproj" />
     <ProjectReference Include="..\TracksLyrics.Repository.File\TracksLyrics.Repository.File.csproj" />
     <ProjectReference Include="..\TracksLyrics.Search\TracksLyrics.Search.csproj" />
     <ProjectReference Include="..\TracksLyrics.Services\TracksLyrics.Services.csproj" />

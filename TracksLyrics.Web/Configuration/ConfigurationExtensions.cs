@@ -7,7 +7,7 @@ public static class ConfigurationExtensions
 {
     public static string GetPostgreSqlConnectionString(this IConfiguration configuration)
     {
-        var config = configuration.GetDbConnectionConfiguration();
+        var config = configuration.GetPostgreDbConnectionConfiguration();
         
         NpgsqlConnectionStringBuilder builder = new ()
         {
@@ -31,9 +31,11 @@ public static class ConfigurationExtensions
         return builder.ToString();
     }
 
-    public static PostgreSqlConnectionConfiguration? GetDbConnectionConfiguration(this IConfiguration configuration) =>
-        configuration.GetSection("Database").Get<PostgreSqlConnectionConfiguration>();
+    public static PostgreSqlConnectionConfiguration? GetPostgreDbConnectionConfiguration(this IConfiguration configuration) =>
+        configuration.GetSection("PostgreDatabase").Get<PostgreSqlConnectionConfiguration>();
     
+    public static MongoConnectionConfiguration? GetMongoConnectionConfiguration(this IConfiguration configuration) =>
+        configuration.GetSection("MongoDatabase").Get<MongoConnectionConfiguration>();
 
     public static int GetDbContextPoolSize(this IConfiguration configuration) => 
         configuration.GetValue("Database:MaxPoolSize", 124);

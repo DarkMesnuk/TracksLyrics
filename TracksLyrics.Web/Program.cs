@@ -1,9 +1,9 @@
 using Common.Exceptions.Configuration;
-using Common.Extensions;
 using Requestor;
 using TracksLyrics.Application;
 using TracksLyrics.Domain.Configurations;
 using TracksLyrics.Repository.DataBase;
+using TracksLyrics.Repository.DataBase.Mongo;
 using TracksLyrics.Search;
 using TracksLyrics.Services;
 using TracksLyrics.Web.Configuration;
@@ -39,7 +39,8 @@ builder.Services.AddAutoMapper(typeof(RequestsMappings).Assembly);
         
 builder.Services.AddApplication();
 builder.Services.AddServices();
-builder.Services.AddDatabase(configuration.GetPostgreSqlConnectionString(), configuration.GetDbContextPoolSize());
+//builder.Services.AddPostgreDatabase(configuration.GetPostgreSqlConnectionString(), configuration.GetDbContextPoolSize());
+builder.Services.AddMongoDatabase(configuration.GetMongoConnectionConfiguration());
 //builder.Services.AddFileRepository();
 builder.Services.AddParsers();
 builder.Services.AddRequestor();
@@ -69,5 +70,5 @@ app.UseEndpoints(endpoints => {
 });
 #pragma warning restore ASP0014
 
-app.MigrateDbContext<TracksLyricsContext>()
-    .Run();
+//app.MigrateDbContext<TracksLyricsContext>()
+    //.Run();

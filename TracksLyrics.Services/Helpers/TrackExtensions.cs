@@ -1,10 +1,11 @@
 ﻿using TracksLyrics.Domain.Models;
+using TracksLyrics.Domain.Models.Mongo;
 
 namespace TracksLyrics.Services.Helpers;
 
 public static class TrackExtensions
 {
-    public static List<string>? CombineLyrics(this TrackLyricModel model)
+    public static List<string>? CombineLyrics(this TrackModel model)
     {
         if (model.Lyrics.Count == 0 || model.Lyrics.Count != model.TranslatedLyrics.Count)
             return null;

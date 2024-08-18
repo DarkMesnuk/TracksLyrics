@@ -17,7 +17,7 @@ namespace TracksLyrics.Application.Handlers.Parses;
 public class ParseLyricForCurrentTrackByGeniusCommandHandler(
     ILogger<ParseLyricForCurrentTrackByGeniusCommandHandler> logger,
     IMemoryCache memoryCache,
-    ITrackLyricsService trackLyricsService,
+    ITrackLyricService trackLyricService,
     IGeniusParserService geniusParserService
 ) : BaseHandler<ParseLyricForCurrentTrackByGeniusCommandHandler, ParseLyricForCurrentTrackByGeniusCommandRequest, ParseLyricForCurrentTrackByGeniusCommandResponse>(logger)
 {
@@ -33,7 +33,7 @@ public class ParseLyricForCurrentTrackByGeniusCommandHandler(
         if (!trackLyric.IsFinded)
             throw new NotFoundException(nameof(TrackLyricModel));
 
-        var isSuccess = await trackLyricsService.SetLyricToTrackAsync(trackInfo!, new SetLyricToTrackSchema
+        var isSuccess = await trackLyricService.SetLyricToTrackAsync(trackInfo!, new SetLyricToTrackSchema
         {
             IsTranslate = false,
             Lyrics = trackLyric.Lyrics

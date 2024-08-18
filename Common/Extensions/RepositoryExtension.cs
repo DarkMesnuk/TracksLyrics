@@ -3,11 +3,24 @@ using System.Linq.Expressions;
 using Common.Schemas;
 using Common.Base.Interfaces.Entities;
 using Common.Base.Interfaces.Requests;
+using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
 
 namespace Common.Extensions;
 
 public static class RepositoryExtension
 {
+    public static IServiceCollection AddMongoCollection<T>(this IServiceCollection services, string collectionName)
+    {
+        services.AddSingleton<IMongoCollection<T>>(sp =>
+        {
+            var database = sp.GetRequiredService<IMongoDatabase>();
+            return database.GetCollection<T>(collectionName);
+        });
+
+        return services;
+    }
+    
     public static IPaginatedResponseSchema<E> Page<E>(this IQueryable<E> query, IPaginatedRequest schema)
         where E : class, IEntity, new()
     {

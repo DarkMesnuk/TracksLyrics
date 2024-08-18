@@ -1,0 +1,38 @@
+﻿using Common.Base.Interfaces.Models;
+
+namespace TracksLyrics.Domain.Models.Mongo;
+
+public class TrackModel : IEntityModel<Guid>
+{
+    public Guid Id { get; set; }
+    
+    public string Name { get; set; } = string.Empty;
+    public string Artist { get; set; } = string.Empty;
+    
+    public List<string> Lyrics { get; set; } = new();
+    public List<string> TranslatedLyrics { get; set; } = new();
+    
+    public bool IsTranslated => TranslatedLyrics.Any(); 
+    public bool IsFinded => Lyrics.Any();
+    
+    public TrackModel() 
+    {
+    }
+    
+    public TrackModel(string name, string artist, List<string> lyrics) : this()
+    {
+        Name = name;
+        Artist = artist;
+        Lyrics = lyrics;
+    }
+    
+    public TrackModel(string name, string artist, List<string> lyrics, List<string> translatedLyrics) : this(name, artist, lyrics)
+    {
+        TranslatedLyrics = translatedLyrics;
+    }
+    
+    public override string ToString()
+    {
+        return Name + " - " + Artist;
+    }
+}

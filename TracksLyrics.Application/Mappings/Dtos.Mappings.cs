@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using TracksLyrics.Application.Dtos;
 using TracksLyrics.Domain.Models;
+using TracksLyrics.Domain.Models.Mongo;
 using TracksLyrics.Services.Helpers;
 
 namespace TracksLyrics.Application.Mappings;
@@ -9,7 +10,7 @@ public class DtosMappings : Profile
 {
     public DtosMappings()
     {
-        CreateMap<TrackLyricModel, TrackLyricDto>()
+        CreateMap<TrackModel, TrackDto>()
             .ForMember(dest => dest.CombinedLyrics, opt => opt.MapFrom(src => src.CombineLyrics()));
     }
 }

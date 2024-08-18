@@ -5,7 +5,7 @@ namespace TracksLyrics.WPF.Helpers;
 
 public static class ItemCollectionsExtensions
 {
-    public static void AddLyrics(this ItemCollection items, TrackLyricDto trackLyric)
+    public static void AddLyrics(this ItemCollection items, TrackDto trackLyric)
     {
         if (trackLyric.IsTranslated)
         {
@@ -24,7 +24,7 @@ public static class ItemCollectionsExtensions
         items.Add(" " + lyric);
     }
 
-    private static void AddTranslatedLyric(this ItemCollection items, TrackLyricDto trackLyric, int index)
+    private static void AddTranslatedLyric(this ItemCollection items, TrackDto trackLyric, int index)
     {
         items.AddLyric(trackLyric.Lyrics![index]);
         items.AddLyric(trackLyric.TranslatedLyrics![index]);

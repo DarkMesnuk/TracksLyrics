@@ -20,7 +20,6 @@ public class TrackLyricsRepository(
         var entity = await GetBase.FirstOrDefaultAsync(x => x.Name == trackInfo.Name && x.Artist == trackInfo.Artist);
 
         return MapToModel(entity!);
-
     }
 
     public async Task<TrackLyricModel> UpdateLyricsAsync(TrackLyricModel trackLyric)

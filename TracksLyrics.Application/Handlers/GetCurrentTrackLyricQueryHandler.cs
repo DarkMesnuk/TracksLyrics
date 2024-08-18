@@ -11,6 +11,7 @@ using TracksLyrics.Application.Dtos;
 using TracksLyrics.Domain.Consts;
 using TracksLyrics.Domain.Interfaces.Services;
 using TracksLyrics.Domain.Models;
+using TracksLyrics.Domain.Models.Mongo;
 
 namespace TracksLyrics.Application.Handlers;
 
@@ -18,7 +19,7 @@ public class GetCurrentTrackLyricQueryHandler(
     ILogger<GetCurrentTrackLyricQueryHandler> logger, 
     IMapper mapper, 
     IMemoryCache memoryCache,
-    ITrackLyricsService trackLyricsService,
+    ITrackLyricService trackLyricService,
     IParsersService parsersService
     ) : BaseHandler<GetCurrentTrackLyricQueryHandler, GetCurrentTrackLyricQueryRequest, GetCurrentTrackLyricQueryResponse>(logger)
 {
@@ -29,7 +30,7 @@ public class GetCurrentTrackLyricQueryHandler(
         if (!memoryCache.TryGetValue(TrackInfoConsts.CacheName, out TrackInfoModel? trackInfo) && trackInfo.IsNullOrDefault())
             throw new NotFoundException(nameof(TrackInfoModel));
 
-        var trackLyric = await trackLyricsService.ParseAndSaveTrackLyricAsync(trackInfo!, parsersService);
+        var trackLyric = await trackLyricService.ParseAndSaveTrackLyricAsync(trackInfo!, parsersService);
         
         return result.SetData(trackLyric);
     }
@@ -39,6 +40,6 @@ public class GetCurrentTrackLyricQueryRequest : BaseHandlerRequest<GetCurrentTra
 
 public class GetCurrentTrackLyricQueryResponse(
     IMapper mapper
-) : BaseQueryResponse<GetCurrentTrackLyricQueryResponse, TrackLyricDto, TrackLyricModel>(mapper);
+) : BaseQueryResponse<GetCurrentTrackLyricQueryResponse, TrackDto, TrackModel>(mapper);
 
 internal class GetCurrentTrackLyricRequestValidator : AbstractValidator<GetCurrentTrackLyricQueryRequest>;
